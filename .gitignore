@@ -2,3 +2,5 @@ __pycache__/
 *__pycache__
 .vscode
 main.py
+pyproject.toml
+poetry.lock
