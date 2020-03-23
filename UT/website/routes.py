@@ -65,7 +65,7 @@ def samplelocation_with_date(locationid, date):
     )
 
 
-@main.route(
+@website.route(
     "/my_appointment/<int:locationid>/<string:date>/<string:time>",
     method=["GET", "POST"],
 )
