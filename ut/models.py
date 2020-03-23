@@ -15,6 +15,18 @@ class Status(enum.Enum):
     NO_SHOW = "No show"
     CANCELLED = "Cancelled"
 
+class AppointmentSlot(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	location_id = db.Column(db.Integer, db.ForeignKey("location.id"))
+	date_time = db.Column(db.DateTime)
+	slot_1 = db.Column(db.Boolean, default=False)
+	slot_1_appointment = db.Column(db.Integer, db.ForeignKey("appointment.id"))
+
+	def __repr__(self):
+		return f'{self.id} at {self.location_id} on {datetime.strftime(self.date_time, "%m/%d %H:%M")}'
+
+
+
 
 class Appointment(db.Model):
 

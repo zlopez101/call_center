@@ -2,7 +2,8 @@
 from ut import db
 from ut.models import Employee
 
-names = [
+def create_employees():
+	names = [
     'Zachary Lopez',
     "Donna Weinert",
     "Corina Vasquez",
@@ -18,15 +19,18 @@ names = [
     "Danisha Thomas",
     "Marby _blank_",
     "Mercedes Villatoro",
-    'Call Center'
+    'Call Center', 
     'Web Site'
-]
+	]
 
-for name in names:
+	for name in names:
     lst = name.split(" ")
     add = Employee(first=lst[0], last=lst[-1])
     db.session.add(add)
     db.session.commit()
     print(f"{lst[0]} {lst[-1]} added")
+	return "Success"
+
+
 
 

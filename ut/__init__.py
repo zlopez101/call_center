@@ -7,10 +7,11 @@ from ut.config import Config
 #for db updating...
 #app = Flask(__name__)
 #app.config.from_object(Config)
+#db = SQLAlchemy(app)
 db = SQLAlchemy()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
-#db = SQLAlchemy()
+db = SQLAlchemy()
 login_manager.login_view = "login"
 login_manager.login_message_category = "info"
 

@@ -1,5 +1,5 @@
 from flask import render_template, Blueprint, flash, redirect, url_for
-from ut.models import Location, Appointment, Patient, Employee
+from ut.models import Location, Appointment, Patient, Employee, AppointmentSlot
 from ut.website.forms import SignUp, CheckApt
 from ut import db
 import datetime
@@ -34,29 +34,26 @@ def samplelocation(locationid):
 @website.route("/<int:locationid>/<string:date>", methods=["GET", "POST"])
 def samplelocation_with_date(locationid, date):
 	date = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-	#Appointment.schedule_date_time>=date, Appointment.schedule_date_time<=date + datetime.timedelta(days=5))
-	appointments = Appointment.query.filter_by(location_id=locationid).all()
+	appointmentslots = AppointmentSlot.query.filter(AppointmentSlot.date_time>date, AppointmentSlot.location_id==locationid).all()
 	location = Location.query.filter_by(id=locationid).first_or_404()
 	table_dates = np.arange(date, date + datetime.timedelta(days=5), dtype="datetime64[D]")
 	#define times
 	def create_times():
-		time_start = datetime.datetime.strptime("08:00:00", "%H:%M:%S")
+		time_start = datetime.datetime.strptime("08:15:00", "%H:%M:%S")
 		times = []
 		times.append(time_start)
 		i = 0
-		while i < 36:
+		while i < 35:
 			time_start = time_start+datetime.timedelta(minutes=15)
 			times.append(time_start)
 			i = i+1
 		
 		return times
 	table_times = create_times()
-	appointment_date_times = [appointment.schedule_date_time for appointment in appointments]
-	
 	form = SignUp()
 	if form.validate_on_submit():
 		flash("Still got it!")
-	return render_template("appointment.html",title=f"{location.name} on {date} appointments",legend=f"{location.name} on {date} appointments. Submit Form to sign into an appointment.",location_id=location.id,form=form,appointments=appointments,dates=table_dates, times=table_times, request_day=date,sortable_appointment=appointment_date_times)
+	return render_template("appointment.html",title=f"{location.name} on {date} appointments",legend=f"{location.name} on {date} appointments. Submit Form to sign into an appointment.",location_id=location.id,form=form,appointmentslots=appointmentslots,dates=table_dates, times=table_times, request_day=date)
 
 
 @website.route(

@@ -14,7 +14,6 @@
         <tr>
             <th scope="row">{{ time.hour }} : {{ time.minute }}</th>
 						{%for date in dates%}
-						{% %}
 						<td><a class="btn btn-outline-success" href="{{ url_for('website.my_appointment', locationid=location_id, date=request_day, request_time=time) }}" role="button">Available</a></td>
 						{% endfor%}
         </tr>
