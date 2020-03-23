@@ -4,24 +4,20 @@
     <thead>
         <tr>
             <th scope="col">Time</th>
-            <th scope="col">Date</th>
-            <th scope="col">Date+1</th>
-            <th scope="col">Date+2</th>
+            {% for date in dates %}
+            <th scope="col">{{date}}</th>
+            {% endfor %}
         </tr>
     </thead>
     <tbody>
+        {% for time in times %}
         <tr>
-            <th scope="row">8:00 am</th>
-            <td>henry</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+            <th scope="row">{{ time }}</th>
+            <td><button type="button" class="btn btn-primary">Primary</button></td>
+            <td><button type="button" class="btn btn-primary">Primary</button></td>
+            <td><button type="button" class="btn btn-primary">Primary</button></td>
         </tr>
-        <tr>
-            <th scope="row">8:15 am</th>
-            <td class='bg-primary'>mark</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
+        {% endfor %}
     </tbody>
 </table>
 {% endblock %}

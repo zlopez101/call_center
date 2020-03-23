@@ -1,7 +1,8 @@
 from flask import render_template, Blueprint, flash, redirect, url_for
 from ut.models import Location, Appointment
 from ut.website.forms import SignUp, CheckApt
-from datetime import datetime
+import datetime
+import time
 import numpy as np
 
 
@@ -41,12 +42,15 @@ def samplelocation(locationid):
 
 @website.route("/<int:locationid>/<string:date>", methods=["GET", "POST"])
 def samplelocation_with_date(locationid, date):
-    date = datetime.strptime(date, "%Y-%m-%d").replace(2020)
+    date = datetime.datetime.strptime(date, "%Y-%m-%d").replace(2020)
     appointments = Appointment.query.filter_by(schedule_date=date).all()
     location = Location.query.filter_by(id=locationid).first_or_404()
-    dates = np.arange(date, date + 3, dtype="datetime64[D]")
-    print(type(date))
-    print(date)
+    dates = np.arange(date, date + datetime.timedelta(days=3), dtype="datetime64[D]")
+    times = np.arange(
+        datetime.datetime.strptime("8:00", "%H:%M"),
+        datetime.timedelta(hours=8),
+        step=datetime.timedelta(minutes=15),
+    )
     form = SignUp()
     if form.validate_on_submit():
         flash("Still got it!")
@@ -57,4 +61,19 @@ def samplelocation_with_date(locationid, date):
         form=form,
         appointments=appointments,
         dates=dates,
+        times=times,
     )
+
+
+@main.route(
+    "/my_appointment/<int:locationid>/<string:date>/<string:time>",
+    method=["GET", "POST"],
+)
+def my_appointment(locationid, date, time):
+    form = SignUp()
+    if form.validate_on_submit():
+        flash("Still got it!")
+        return redirect(
+            url_for("samplelocation_with_date", locationid=locationid, date=date)
+        )
+    return render_template("my_appointment.html", title="Sign up Today", form=form)
