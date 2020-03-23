@@ -1,9 +1,9 @@
-"""
+
 from ut import db
 from ut.models import Employee
 
 names = [
-    #'Zachary Lopez',
+    'Zachary Lopez',
     "Donna Weinert",
     "Corina Vasquez",
     "Madeline Armstrong",
@@ -28,5 +28,5 @@ for name in names:
     db.session.add(add)
     db.session.commit()
     print(f"{lst[0]} {lst[-1]} added")
-"""
+
 

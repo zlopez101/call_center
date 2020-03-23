@@ -23,13 +23,12 @@ class Appointment(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow())
     patient_scheduled = db.Column(db.Integer, db.ForeignKey("patient.id"))
     location_id = db.Column(db.Integer, db.ForeignKey("location.id"))
-    schedule_date = db.Column(db.Date)
-    scheduled_time = db.Column(db.Time)
+    schedule_date_time = db.Column(db.DateTime)
     status = db.Column(db.Enum(Status))
     cancel_reason = db.Column(db.String(), default="")
 
     def __repr__(self):
-        return f"Appointment(patient {self.patient_scheduled} scheduled for {self.schedule_date} at {self.scheduled_time})"
+        return f"Appointment(patient {self.patient_scheduled} scheduled for {self.schedule_date_time}"
 
 
 class Employee(db.Model, UserMixin):

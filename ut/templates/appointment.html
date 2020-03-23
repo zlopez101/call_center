@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block content %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Time</th>
+            {% for date in dates %}
+            <th scope="col">{{date}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for time in times  %}
+        <tr>
+            <th scope="row">{{ time.hour }} : {{ time.minute }}</th>
+						{%for date in dates%}
+						{% %}
+						<td><a class="btn btn-outline-success" href="{{ url_for('website.my_appointment', locationid=location_id, date=request_day, request_time=time) }}" role="button">Available</a></td>
+						{% endfor%}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,27 +1,5 @@
-{% extends 'layout.html' %}
-{% block content %}
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th scope="col">Time</th>
-            {% for date in dates %}
-            <th scope="col">{{date}}</th>
-            {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for time in times %}
-        <tr>
-            <th scope="row">{{ time }}</th>
-            <td><button type="button" class="btn btn-primary">Primary</button></td>
-            <td><button type="button" class="btn btn-primary">Primary</button></td>
-            <td><button type="button" class="btn btn-primary">Primary</button></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endblock %}
-{% block sidebar %}
+{% extends "layout.html" %}
+{% block content%}
 <div class="content-section">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
