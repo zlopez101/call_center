@@ -1,6 +1,7 @@
 import flask
 import os
 from twilio.rest import Client
+from ut.models import Location
 
 
 def get_creds():
@@ -21,3 +22,10 @@ def twiml(resp):
     resp = flask.Response(str(resp))
     resp.headers["Content-Type"] = "text/xml"
     return resp
+
+def _create_location_dict():
+  local_dict = {}
+  locations=Location.query.all()
+  for location in locations:
+    local_dict[location.id] = location.name
+  return local_dict

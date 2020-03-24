@@ -1,6 +1,6 @@
-from flask import render_template, Blueprint, url_for, flash, request
-from ut.models import Location, Appointment
-from ut.call_center.view_helpers import twiml, send_confirm_text
+from flask import Blueprint, url_for, request
+from ut.models import Location
+from ut.call_center.view_helpers import twiml, send_confirm_text, _create_location_dict
 from twilio.twiml.voice_response import VoiceResponse, Gather
 
 call_center = Blueprint("call_center", __name__)
@@ -41,24 +41,22 @@ def voice():
 
 @call_center.route("/gather", methods=["GET", "POST"])
 def gather():
-    locations = Location.query.all()
-    location_dict = {}
-    for location in locations:
-        location_dict[location.id] = location.name
     resp = VoiceResponse()
+    location_dict = _create_location_dict()
     choice = int(request.form["Digits"])
 
     if choice in location_dict:
-        resp.say(f"You selected {location_dict[choice]}")
-        resp.redirect(url_for("call_center.call_location", location_id=choice))
-        return twiml(resp)
+      resp.say(f"You selected {location_dict[choice]}")
+      resp.redirect(url_for('call_center._call_location',location_id=choice))
+      return twiml(resp)
 
     return _redirect_welcome()
 
 
-@call_center.route("/location/<int:location_id>", methods=["GET", "POST"])
-def call_location(location_id):
+@call_center.route("/call_center/<int:location_id>", methods=["GET", "POST"])
+def _call_location(location_id):
     resp = VoiceResponse()
+    resp.say('we made it here')
     here = Location.query.filter_by(id=location_id).first()
     resp.say(
         f"Welcome to the {here.name}. We are located at {here.address}. See you soon!"
