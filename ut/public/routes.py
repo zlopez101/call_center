@@ -1,7 +1,7 @@
 from flask import render_template, Blueprint, flash, redirect, url_for
 from ut.models import Location, Appointment, Patient, Employee, AppointmentSlot
-from ut.website.forms import SignUp, CheckApt
-from ut.website.utils import (
+from ut.public.forms import SignUp, CheckApt
+from ut.public.utils import (
     build_times,
     create_times,
     create_table_dict,
@@ -12,16 +12,16 @@ import datetime
 import numpy as np
 
 
-website = Blueprint("website", __name__)
+public = Blueprint("public", __name__, template_folder="public_pages")
 
 
-@website.route("/")
+@public.route("/")
 def home():
     locations = Location.query.all()
     return render_template("welcome.html", locations=locations)
 
 
-@website.route("/<int:locationid>", methods=["GET", "POST"])
+@public.route("/<int:locationid>", methods=["GET", "POST"])
 def samplelocation(locationid):
     appointments_at_location = Appointment.query.filter_by(location_id=locationid).all()
     location = Location.query.filter_by(id=locationid).first_or_404()
@@ -38,7 +38,7 @@ def samplelocation(locationid):
         print(date_and_time)
         return redirect(
             url_for(
-                "website.samplelocation_with_date",
+                "public.samplelocation_with_date",
                 locationid=location.id,
                 date=date_and_time,
             )
@@ -53,7 +53,7 @@ def samplelocation(locationid):
     )
 
 
-@website.route("/<int:locationid>/<string:date>", methods=["GET", "POST"])
+@public.route("/<int:locationid>/<string:date>", methods=["GET", "POST"])
 def samplelocation_with_date(locationid, date):
     _date, _ = parse_date_as_string(date)
 
@@ -86,7 +86,7 @@ def samplelocation_with_date(locationid, date):
     )
 
 
-@website.route(
+@public.route(
     "/my_appointment/<int:locationid>/<string:date>/<string:request_time>/<int:aS_id>",
     methods=["GET", "POST"],
 )
@@ -127,9 +127,7 @@ def my_appointment(locationid, date, request_time, aS_id):
             f"{new_patient.first} {new_patient.last} created an appointment at {location.name} on {_day} at {_time}. Thank you "
         )
         return redirect(
-            url_for(
-                "website.samplelocation_with_date", locationid=locationid, date=date
-            )
+            url_for("public.samplelocation_with_date", locationid=locationid, date=date)
         )
     return render_template(
         "my_appointment.html",

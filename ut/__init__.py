@@ -4,10 +4,10 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from ut.config import Config
 
-#for db updating...
-#app = Flask(__name__)
-#app.config.from_object(Config)
-#db = SQLAlchemy(app)
+# for db updating...
+# app = Flask(__name__)
+# app.config.from_object(Config)
+# db = SQLAlchemy(app)
 db = SQLAlchemy()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
@@ -17,16 +17,18 @@ login_manager.login_message_category = "info"
 
 
 def create_app(config_class=Config):
-	app = Flask(__name__)
-	app.config.from_object(Config)
-	db.init_app(app)
-	bcrypt.init_app(app)
-	login_manager.init_app(app)
-	from ut.calls.routes import calls
-	from ut.employees.routes import employees
-	from ut.website.routes import website
-	
-	app.register_blueprint(website)
-	app.register_blueprint(employees)
-	app.register_blueprint(calls)
-	return app
+    app = Flask(__name__)
+    app.config.from_object(Config)
+    db.init_app(app)
+    bcrypt.init_app(app)
+    login_manager.init_app(app)
+    from ut.call_center.routes import call_center
+    from ut.employees.routes import employees
+    from ut.public.routes import public
+    from ut.confirmations.routes import confirmations
+
+    app.register_blueprint(public)
+    app.register_blueprint(employees)
+    app.register_blueprint(call_center)
+    app.register_blueprint(confirmations)
+    return app

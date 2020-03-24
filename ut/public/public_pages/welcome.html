@@ -6,7 +6,7 @@
     <div class="card-body">
       <h5 class="card-title">{{ location.name }}</h5>
       <p class="card-text">{{ location.name }} is located at {{ location.address}}.</p>
-      <a href="{{ url_for('website.samplelocation', locationid=location.id) }}">Get an Appointment Now</a>
+      <a href="{{ url_for('public.samplelocation', locationid=location.id) }}">Get an Appointment Now</a>
       <p class='card=-text'>call for appointment, option {{location.id}}</p>
       <p class="card-text"><small class="text-muted">Hours of Operations: 8 am - 5pm</small></p>
     </div>
