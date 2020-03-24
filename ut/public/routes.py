@@ -124,10 +124,16 @@ def my_appointment(locationid, date, request_time, aS_id):
         db.session.commit()
 
         flash(
-            f"{new_patient.first} {new_patient.last} created an appointment at {location.name} on {_day} at {_time}. Thank you "
+            f"{new_patient.first} {new_patient.last} created an appointment at {location.name} on {_day} at {_time}. Thank you",
+            "success",
         )
         return redirect(
-            url_for("public.samplelocation_with_date", locationid=locationid, date=date)
+            url_for(
+                "confirmations.confirm_appointment",
+                locationid=locationid,
+                date=date,
+                patientid=new_patient.id,
+            )
         )
     return render_template(
         "my_appointment.html",
