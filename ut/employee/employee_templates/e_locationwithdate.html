@@ -1,0 +1,31 @@
+{% extends "e_layout.html" %}
+{% block content %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Time</th>
+            {% for date in dates %}
+            <th scope="col">{{date}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for time in time_table.keys()  %}
+        <tr>
+            <th scope="row">{{ time.hour }} : {{ time.minute }}</th>
+            {%for aS in time_table[time] %}
+            {% for aS_  in aS%}
+            {% if aS_.slot_1 == False%}
+            <td><a class="btn btn-outline-success"
+                    href="{{ url_for('employee.appointment', locationid=location_id, date=aS_.date_time, request_time=time, aS_id=aS_.id) }}"
+                    role="button">Available</a></td>
+            {% else %}
+            <td><a class="btn btn-outline-danger" href="#" role="button">Taken!</a></td>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

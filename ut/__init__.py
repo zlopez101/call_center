@@ -23,12 +23,12 @@ def create_app(config_class=Config):
     bcrypt.init_app(app)
     login_manager.init_app(app)
     from ut.call_center.routes import call_center
-    from ut.employees.routes import employees
+    from ut.employee.routes import employee
     from ut.public.routes import public
     from ut.confirmations.routes import confirmations
 
     app.register_blueprint(public)
-    app.register_blueprint(employees)
+    app.register_blueprint(employee)
     app.register_blueprint(call_center)
     app.register_blueprint(confirmations)
     return app

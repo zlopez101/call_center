@@ -28,7 +28,7 @@ def samplelocation(locationid):
 
     form = CheckApt()
     if form.validate_on_submit():
-        flash("We submitted a form", "success")
+        flash(f"{location.name} schedule for next five days after your chosen date {form.date.data.strftime('%m/%d')}", "success")
         date = form.date.data
         date = date.replace(2020)
         date_and_time = datetime.datetime.combine(
