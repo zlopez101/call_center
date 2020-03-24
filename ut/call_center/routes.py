@@ -1,7 +1,6 @@
 from flask import render_template, Blueprint, url_for, flash, request
 from ut.models import Location, Appointment
-from ut.call_center.view_helpers import twiml
-from ut.call_center.messenger import send_confirm_text
+from ut.call_center.view_helpers import twiml, send_confirm_text
 from twilio.twiml.voice_response import VoiceResponse, Gather
 
 call_center = Blueprint("call_center", __name__)
