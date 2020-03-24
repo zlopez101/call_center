@@ -13,13 +13,17 @@
         {% for time in time_table.keys()  %}
         <tr>
             <th scope="row">{{ time.hour }} : {{ time.minute }}</th>
-						{%for aS in time_table[time] %}	
-						{% if aS.slot_1 == False%}
-						<td><a class="btn btn-outline-success" href="{{ url_for('website.my_appointment', locationid=location_id, date=request_day, request_time=time, aS_id=aS.id) }}" role="button">Available</a></td>
-						{% else %}
-						<td><a class="btn btn-outline-danger" href="#" role="button">Taken!</a></td>
-						{% endif %}
-						{% endfor %}
+            {%for aS in time_table[time] %}
+            {% for aS_  in aS%}
+            {% if aS_.slot_1 == False%}
+            <td><a class="btn btn-outline-success"
+                    href="{{ url_for('website.my_appointment', locationid=location_id, date=aS_.date_time, request_time=time, aS_id=aS_.id) }}"
+                    role="button">Available</a></td>
+            {% else %}
+            <td><a class="btn btn-outline-danger" href="#" role="button">Taken!</a></td>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
         </tr>
         {% endfor %}
     </tbody>
