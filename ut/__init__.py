@@ -12,9 +12,11 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
 db = SQLAlchemy()
-login_manager.login_view = "login"
+login_manager = LoginManager()
+login_manager.login_view = "employee.login"
 login_manager.login_message_category = "info"
 
+logged_on_employees_call_center_dict = {}
 
 def create_app(config_class=Config):
     app = Flask(__name__)

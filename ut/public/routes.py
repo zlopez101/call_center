@@ -2,13 +2,11 @@ from flask import render_template, Blueprint, flash, redirect, url_for
 from ut.models import Location, Appointment, Patient, Employee, AppointmentSlot
 from ut.public.forms import SignUp, CheckApt
 from ut.public.utils import (
-    build_times,
     create_times,
     create_table_dict,
     parse_date_as_string,
 )
 from ut import db
-from authy.api import AuthyApiClient
 import datetime
 import numpy as np
 
@@ -137,7 +135,7 @@ def my_appointment(locationid, date, request_time, aS_id):
                 locationid=locationid,
                 date=date,
                 patientid=new_patient.id,
-                _from="public",
+                _fom="public",
             )
         )
     return render_template(

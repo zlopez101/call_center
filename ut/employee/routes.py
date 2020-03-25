@@ -4,7 +4,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from ut.models import Employee, Location, AppointmentSlot, Patient, Appointment
 from ut.public.forms import SignUp, CheckApt
 from ut.public.utils import parse_date_as_string, create_times, create_table_dict
-from ut import db
+from ut import db, logged_on_employees_call_center_dict
 import datetime as dt
 import numpy as np
 
@@ -15,7 +15,10 @@ employee = Blueprint("employee", __name__, template_folder="employee_templates")
 @employee.route("/employee_home", methods=["GET", "POST"])
 @login_required
 def e_home():
+    
     locations = Location.query.all()
+    print(logged_on_employees_call_center_dict)
+    print(current_user)
     form = SignUp()
     if form.validate_on_submit():
         flash("Form Submission was complete!", "success")
@@ -148,7 +151,7 @@ def appointment(locationid, date, aS_id):
 @employee.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("main_blueprint.home"))
+        return redirect(url_for("employee.e_home"))
     form = LoginForm_db_not_formed()
     if form.validate_on_submit():
 
@@ -156,8 +159,9 @@ def login():
         if employee:
             login_user(employee)
             next_page = request.args.get("next")
+            logged_on_employees_call_center_dict[employee.id]=True
             return (
-                redirect(next_page) if next_page else redirect(url_for("employee.home"))
+                redirect(next_page) if next_page else redirect(url_for("employee.e_home"))
             )
         else:
             flash("Login Unsuccessful", "danger")
@@ -181,6 +185,8 @@ def register():
 @employee.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
+    del logged_on_employees_call_center_dict[current_user.id]
+    print(logged_on_employees_call_center_dict)
     logout_user()
     return redirect(url_for("employee.login"))
 

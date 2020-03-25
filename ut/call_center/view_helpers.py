@@ -2,7 +2,7 @@ import flask
 import os
 from twilio.rest import Client
 from ut.models import Location
-
+from numpy import random
 
 def get_creds():
     TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
@@ -29,3 +29,9 @@ def _create_location_dict():
   for location in locations:
     local_dict[location.id] = location.name
   return local_dict
+
+def random_responder(logged_users):
+  'Right now will always return true, but in next database update will return employee phone call'
+  select_random = len(list(logged_users.keys()))
+  random_index = random.choice(select_random, 1).tolist()
+  return random_index

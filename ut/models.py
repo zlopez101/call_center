@@ -2,7 +2,7 @@ from datetime import datetime
 import enum
 from ut import db, login_manager
 from flask_login import UserMixin
-from itsdangerous import JSONWebSignatureSerializer as Serializer
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 
 
@@ -69,8 +69,8 @@ class Patient(db.Model):
     appointment = db.relationship("Appointment", backref="patient", lazy=True)
 
     def confirm_patient_creation(self, expires_in=1800):
-        s = Serializer(current_app.config["SECRET_KEY"], expires_in)
-        return s.dumps({"patient_id", self.id}).decode("utf-8")
+      s = Serializer(current_app.config["SECRET_KEY"], expires_in)
+      return s.dumps({"patient_id": self.id}).decode("utf-8")
 
     @staticmethod
     def verify_patient(token):

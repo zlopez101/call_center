@@ -1,7 +1,8 @@
 from flask import Blueprint, url_for, request
-from ut.models import Location
-from ut.call_center.view_helpers import twiml, send_confirm_text, _create_location_dict
+from ut.models import Location, Employee
+from ut.call_center.view_helpers import twiml, send_confirm_text, _create_location_dict, random_responder
 from twilio.twiml.voice_response import VoiceResponse, Gather
+from ut import logged_on_employees_call_center_dict
 
 call_center = Blueprint("call_center", __name__)
 
@@ -55,15 +56,19 @@ def gather():
 
 @call_center.route("/call_center/<int:location_id>", methods=["GET", "POST"])
 def _call_location(location_id):
-    resp = VoiceResponse()
-    resp.say('we made it here')
-    here = Location.query.filter_by(id=location_id).first()
-    resp.say(
-        f"Welcome to the {here.name}. We are located at {here.address}. See you soon!"
-    )
+  index = random_responder(logged_on_employees_call_center_dict)
+  resp = VoiceResponse()
+  responder = Employee.query.get(index[0])
+  print(responder.first, responder.last)
+  here = Location.query.filter_by(id=location_id).first()
+  resp.say(
+      f"Welcome to the {here.name}")
+  resp.pause(1)
+  resp.say(f"{responder.first} {responder.last} will help you now. Thanks")
+  resp.pause(1)
+  resp.say(f"We are located at {here.address}. See you soon!")
 
-    return twiml(resp)
-
+  return twiml(resp)
 
 def _redirect_welcome():
     response = VoiceResponse()

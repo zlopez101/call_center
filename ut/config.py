@@ -1,3 +1,5 @@
+import os
+
 class Config:
-    SECRET_KEY = "ASDFDSFSDFSD"
+    SECRET_KEY = os.urandom(32)
     SQLALCHEMY_DATABASE_URI = "sqlite:///site.db"
