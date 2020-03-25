@@ -10,9 +10,9 @@ confirmations = Blueprint(
 
 
 @confirmations.route(
-    "/confirm_appointment/<int:locationid>/<int:patientid>/<string:date>"
+    "/confirm_appointment/<int:locationid>/<int:patientid>/<string:date>/string:from"
 )
-def confirm_appointment(locationid, patientid, date):
+def confirm_appointment(locationid, patientid, date, _from):
     patient = Patient.query.filter_by(id=patientid).first()
     location = Location.query.filter_by(id=locationid).first()
     _day, _time = parse_date_as_string(date)
@@ -23,5 +23,7 @@ def confirm_appointment(locationid, patientid, date):
 
     send_confirm_text("+17134306973", message_string)
     flash("Confirmation Text has been sent!", "success")
-    return redirect(url_for("public.home"))
-    
+    if _from=='public':
+        return redirect(url_for("public.home"))
+    else: 
+        return redirect(url_for("employee.e_home"))

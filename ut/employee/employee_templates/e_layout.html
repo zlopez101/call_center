@@ -20,7 +20,7 @@
 <body>
   <header class="site-header">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="{{ url_for('employee.home') }}">UT Physicians CoronaVirus Testing</a>
+      <a class="navbar-brand" href="{{ url_for('employee.e_home') }}">UT Physicians CoronaVirus Testing</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -31,16 +31,18 @@
             <a class="nav-link" href="{{ url_for('employee.about')}}">About</a>
           </li>
           <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Clinics
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					{% for location in locations %}
-          <a class="dropdown-item" href="{{ url_for('employee.location', locationid=location.id)}}">{{location.name}}</a>
-					{% endfor %}
-				</div>
-      </li>
- 
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Clinics
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% for location in locations %}
+              <a class="dropdown-item"
+                href="{{ url_for('employee.location', locationid=location.id)}}">{{location.name}}</a>
+              {% endfor %}
+            </div>
+          </li>
+
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">

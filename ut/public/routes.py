@@ -8,6 +8,7 @@ from ut.public.utils import (
     parse_date_as_string,
 )
 from ut import db
+from authy.api import AuthyApiClient
 import datetime
 import numpy as np
 
@@ -28,7 +29,10 @@ def samplelocation(locationid):
 
     form = CheckApt()
     if form.validate_on_submit():
-        flash(f"{location.name} schedule for next five days after your chosen date {form.date.data.strftime('%m/%d')}", "success")
+        flash(
+            f"{location.name} schedule for next five days after your chosen date {form.date.data.strftime('%m/%d')}",
+            "success",
+        )
         date = form.date.data
         date = date.replace(2020)
         date_and_time = datetime.datetime.combine(
@@ -133,6 +137,7 @@ def my_appointment(locationid, date, request_time, aS_id):
                 locationid=locationid,
                 date=date,
                 patientid=new_patient.id,
+                _from="public",
             )
         )
     return render_template(

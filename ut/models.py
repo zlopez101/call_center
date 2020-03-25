@@ -2,7 +2,8 @@ from datetime import datetime
 import enum
 from ut import db, login_manager
 from flask_login import UserMixin
-
+from itsdangerous import JSONWebSignatureSerializer as Serializer
+from flask import current_app
 
 
 @login_manager.user_loader
@@ -16,16 +17,16 @@ class Status(enum.Enum):
     NO_SHOW = "No show"
     CANCELLED = "Cancelled"
 
+
 class AppointmentSlot(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	location_id = db.Column(db.Integer, db.ForeignKey("location.id"))
-	date_time = db.Column(db.DateTime)
-	slot_1 = db.Column(db.Boolean, default=False)
-	slot_1_appointment = db.Column(db.Integer, db.ForeignKey("appointment.id"))
+    id = db.Column(db.Integer, primary_key=True)
+    location_id = db.Column(db.Integer, db.ForeignKey("location.id"))
+    date_time = db.Column(db.DateTime)
+    slot_1 = db.Column(db.Boolean, default=False)
+    slot_1_appointment = db.Column(db.Integer, db.ForeignKey("appointment.id"))
 
-	def __repr__(self):
-		return f'{self.id} at {self.location_id} on {datetime.strftime(self.date_time, "%m/%d %H:%M")}'
-
+    def __repr__(self):
+        return f'{self.id} at {self.location_id} on {datetime.strftime(self.date_time, "%m/%d %H:%M")}'
 
 
 
@@ -66,6 +67,19 @@ class Patient(db.Model):
     lang = db.Column(db.String())
     ins = db.Column(db.String())
     appointment = db.relationship("Appointment", backref="patient", lazy=True)
+
+    def confirm_patient_creation(self, expires_in=1800):
+        s = Serializer(current_app.config["SECRET_KEY"], expires_in)
+        return s.dumps({"patient_id", self.id}).decode("utf-8")
+
+    @staticmethod
+    def verify_patient(token):
+        s = Serializer(current_app.config["SECRET_KEY"])
+        try:
+            patient_id = s.loads(token)["patient_id"]
+        except:
+            return None
+        return Patient.query.get(patient_id)
 
     def __repr__(self):
         return f"Patient({self.first} {self.last})"

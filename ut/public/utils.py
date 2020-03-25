@@ -1,5 +1,6 @@
 import datetime as dt
-
+from authy.api import AuthyApiClient
+import os
 
 # build days for AppointmentSlot
 def build_days():
@@ -70,3 +71,7 @@ def parse_date_as_string(_date_as_string):
     _day = _date_as_string.split(" ")[0]
     _time = _date_as_string.split(" ")[-1]
     return _day, _time
+
+
+def _create_authy():
+    authy_client = AuthyApiClient(os.environ.get("AUTHY_KEY"))
