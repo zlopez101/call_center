@@ -41,6 +41,12 @@ class Appointment(db.Model):
     status = db.Column(db.Enum(Status))
     cancel_reason = db.Column(db.String(), default="")
 
+    def complete_status(self):
+      self.status = "COMPLETE"
+    
+    def cancel_appointment(self):
+      self.status = "CANCELLED"
+
     def __repr__(self):
         return f"Appointment(patient {self.patient_scheduled} scheduled for {self.schedule_date_time}"
 

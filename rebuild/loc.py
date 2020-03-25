@@ -1,10 +1,10 @@
 import pandas as pd
 import datetime as dt
 from ut import db
-from ut.models import Location, AppointmentSlot
+from ut.models import Location, AppointmentSlot, Employee
 
 df = pd.read_csv('clinics.csv')
-
+z = Employee(first='Zachary', last='Lopez', password='password', username='Zachary.Lopez@uth.tmc.edu', email="Zachary.Lopez@uth.tmc.edu")
 for row in df.itertuples():
 	l = Location(name=row.clinic, address=row.address)
 	db.session.add(l)
@@ -49,3 +49,4 @@ def create_appointmentslots(locations, days, datetime_dct):
 				db.session.add(app)
 	db.session.commit()
 	return f'IT IS DONE!'
+example = create_appointmentslots(locations, days, datetime_dct)
