@@ -5,13 +5,12 @@ from flask_bcrypt import Bcrypt
 from ut.config import Config
 
 # for db updating...
-# app = Flask(__name__)
-# app.config.from_object(Config)
-# db = SQLAlchemy(app)
+#app = Flask(__name__)
+#app.config.from_object(Config)
+#db = SQLAlchemy(app)
+#login_manager = LoginManager(app)
 db = SQLAlchemy()
-login_manager = LoginManager()
 bcrypt = Bcrypt()
-db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = "employee.login"
 login_manager.login_message_category = "info"

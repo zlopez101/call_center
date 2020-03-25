@@ -48,6 +48,9 @@ class Appointment(db.Model):
 class Employee(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key=True)
+    username =  db.Column(db.String())
+    email =  db.Column(db.String())
+    password =  db.Column(db.String())
     first = db.Column(db.String())
     last = db.Column(db.String())
     scheduled = db.relationship("Appointment", backref="scheduler", lazy=True)
@@ -66,6 +69,7 @@ class Patient(db.Model):
     email = db.Column(db.String())
     lang = db.Column(db.String())
     ins = db.Column(db.String())
+    confirmed = db.Column(db.Boolean)
     appointment = db.relationship("Appointment", backref="patient", lazy=True)
 
     def confirm_patient_creation(self, expires_in=1800):
