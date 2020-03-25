@@ -1,5 +1,6 @@
-from flask import render_template, Blueprint, flash, redirect, url_for, request
+from flask import render_template, Blueprint, flash, redirect, url_for, request, current_app
 from ut.employee.forms import RegisterForm, LoginForm_db_not_formed
+from ut.employee.utils import add_user, remove_user
 from flask_login import current_user, login_required, login_user, logout_user
 from ut.models import Employee, Location, AppointmentSlot, Patient, Appointment
 from ut.public.forms import SignUp, CheckApt
@@ -17,7 +18,7 @@ employee = Blueprint("employee", __name__, template_folder="employee_templates")
 def e_home():
     
     locations = Location.query.all()
-    print(logged_on_employees_call_center_dict)
+    print(current_app.logged_on_employees_call_center_dict)
     print(current_user)
     form = SignUp()
     if form.validate_on_submit():
@@ -159,7 +160,8 @@ def login():
         if employee:
             login_user(employee)
             next_page = request.args.get("next")
-            logged_on_employees_call_center_dict[employee.id]=True
+            current_app.logged_on_employees_call_center_dict = add_user(employee.id)
+            print(current_app.logged_on_employees_call_center_dict)
             return (
                 redirect(next_page) if next_page else redirect(url_for("employee.e_home"))
             )
@@ -185,8 +187,7 @@ def register():
 @employee.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
-    del logged_on_employees_call_center_dict[current_user.id]
-    print(logged_on_employees_call_center_dict)
+    current_app.logged_on_employees_call_center_dict = remove_user(current_user.id)
     logout_user()
     return redirect(url_for("employee.login"))
 
