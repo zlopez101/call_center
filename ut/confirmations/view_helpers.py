@@ -4,8 +4,8 @@ from twilio.rest import Client
 
 
 def get_creds():
-    TWILIO_ACCOUNT_SID = "ACda849c6bd28c138a0bdb7bc19e0eb797"
-    TWILIO_AUTH_TOKEN = "4558ab60bf3ca11710e53b4cc9459937"
+    TWILIO_ACCOUNT_SID = ""
+    TWILIO_AUTH_TOKEN = ""
     _from_ = "+12057362289"
     return (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, _from_)
 
