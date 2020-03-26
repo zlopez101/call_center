@@ -4,10 +4,13 @@
   <div class="container" id='bigWelcomeContainer'>
     <h1 class="display-4">Welcome to the UT Physicians Coronvirus Screening Website</h1>
     <p class="lead">I wanted to empower patients to schedule screening quickly and easily.</p>
-    <p class='lead'>Enter your address to find Testing Site closest to you<input type='text' id='addressInput'></p>
-
+    <p class='lead'>Please allow UT Physicians to access your location to find a Testing Site close by</p>
   </div>
 </div>
+<div class='content-section' id='map'>
+</div>
+
+
 {% endblock %}
 {% block sidebar %}
 <div class='content-section'>
@@ -23,4 +26,10 @@
   </div>
   {% endfor %}
 </div>
+<script type='text/javascript'>
+   let key= "{{ key }}";
+</script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key={{ key }}callback=initMap">
+</script>
 {% endblock%}

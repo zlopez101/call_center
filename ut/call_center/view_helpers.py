@@ -33,7 +33,7 @@ def _create_location_dict():
     return local_dict
 
 
-def random_responder(logged_users):
+def random_responder():
     "Right now will always return true, but in next database update will return employee phone call"
     employees = Employee.query.filter_by(is_active=True).all()
     if employees:

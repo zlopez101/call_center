@@ -24,7 +24,7 @@ def welcome():
     response.say("Welcome to the U T Physicians Corona Virus Testing Call Line.")
     response.pause(1)
     response.say(
-        "Listen for the Clinic you wish to schedule a screening at and press corresponding key on your keypad"
+        "Listen for the Clinic you wish to schedule a screening at and press the corresponding key on your keypad"
     )
     response.redirect(url_for("call_center.voice"))
     return twiml(response)
@@ -54,7 +54,6 @@ def gather():
     resp = VoiceResponse()
     location_dict = _create_location_dict()
     choice = int(request.form["Digits"])
-    print(current_app.logged_on_employees_call_center_dict)
     if choice in location_dict:
         resp.say(f"You selected {location_dict[choice]}")
         resp.redirect(url_for("call_center._call_location", location_id=choice))
@@ -65,17 +64,9 @@ def gather():
 
 @call_center.route("/call_center/<int:location_id>", methods=["GET", "POST"])
 def _call_location(location_id):
-    print(logged_on_employees_call_center_dict)
-    if len(list(logged_on_employees_call_center_dict.keys())) == 0:
-        pass
-    index = random_responder(current_app.logged_on_employees_call_center_dict)
-    print(index)
-    if index == 0:
-        index = 1
+    employee = random_responder()
     resp = VoiceResponse()
-    responder = Employee.query.filter_by(
-        id=current_app.logged_on_employees_call_center_dict[index]
-    ).first()
+    responder = Employee.query.filter_by(id=employee.id).first()
     print(responder.first, responder.last)
     here = Location.query.filter_by(id=location_id).first()
     resp.say(f"Welcome to the {here.name} clinic")

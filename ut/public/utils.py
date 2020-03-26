@@ -1,6 +1,21 @@
 import datetime as dt
-from authy.api import AuthyApiClient
 import os
+from ut.models import Location
+from flask import current_app
+
+
+def maps(location):
+  link = "https://www.google.com/maps/place/"+location.address
+  google = (
+        "https://maps.googleapis.com/maps/api/staticmap?center="
+        + location.address
+        + "&zoom=13&markers="
+        + location.address
+        + "&size=300x300&key="
+        + current_app.config["MAP_KEY"]
+    )
+  return link, google
+
 
 # build days for AppointmentSlot
 def build_days():
@@ -73,5 +88,3 @@ def parse_date_as_string(_date_as_string):
     return _day, _time
 
 
-def _create_authy():
-    authy_client = AuthyApiClient(os.environ.get("AUTHY_KEY"))

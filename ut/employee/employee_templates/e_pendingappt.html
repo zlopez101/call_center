@@ -1,0 +1,33 @@
+{% extends "e_layout.html" %}
+{% block content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">DOB</th>
+      <th scope="col">phone</th>
+      <th scope="col">confirmed</th>
+      <th scope="col">Scheduled</th>
+      <th scope="col">Location</th>
+      <th scope="col">status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for appointment in appointments %}
+    <tr>
+      <th scope="row">{{ appointment.id}}</th>
+      <td>@mdo</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+      <td>@mdo</td>
+      <td>@mdo</td>
+      <td>@mdo</td>
+      <td>{{ loc.query(filter_by=appointment.location_id).first().name }}</td>
+      <td>{{ appointment.status }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

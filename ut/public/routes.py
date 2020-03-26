@@ -1,19 +1,31 @@
-from flask import render_template, Blueprint, flash, redirect, url_for, current_app
+from flask import render_template, Blueprint, flash, redirect, url_for, current_app, json
 from ut.models import Location, Appointment, Patient, Employee, AppointmentSlot
 from ut.public.forms import SignUp, CheckApt
-from ut.public.utils import create_times, create_table_dict, parse_date_as_string
+from ut.public.utils import create_times, create_table_dict, parse_date_as_string, maps
 from ut import db
 import datetime
 import numpy as np
 
 
 public = Blueprint("public", __name__, template_folder="public_pages")
-
+@public.route('/api/locations_json')
+def api_get_location():
+  return {
+     "type":"Feature",
+      "geometry": {
+        "type":"Point",
+        "coordinates":[29.6268071,-95.1417869]
+      }, 
+      "properties":{
+        "name":"Bayshore MultiSpeciality"
+      }
+  }
 
 @public.route("/")
 def home():
     locations = Location.query.all()
-    return render_template("welcome.html", locations=locations)
+    key = current_app.config['MAP_KEY']
+    return render_template("welcome.html", locations=locations, key=key)
 
 
 @public.route("/about")
@@ -33,15 +45,7 @@ def samplelocation(locationid):
     locations = Location.query.all()
     appointments_at_location = Appointment.query.filter_by(location_id=locationid).all()
     location = Location.query.filter_by(id=locationid).first_or_404()
-    key = current_app.config["MAP_KEY"]
-    google = (
-        "https://maps.googleapis.com/maps/api/staticmap?center="
-        + location.address
-        + "&zoom=14&markers="
-        + location.address
-        + "&size=400x400&key="
-        + key
-    )
+    link, google = maps(location)
     form = CheckApt()
     if form.validate_on_submit():
         flash(
@@ -69,6 +73,7 @@ def samplelocation(locationid):
         legend="Pick a date to check appointment availability",
         google=google,
         locations=locations,
+        link=link
     )
 
 
@@ -121,14 +126,7 @@ def my_appointment(locationid, date, request_time, aS_id):
     aS = AppointmentSlot.query.filter_by(id=aS_id).first()
     location = Location.query.filter_by(id=locationid).first()
     request_date_as_datetime = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-    google = (
-        "https://maps.googleapis.com/maps/api/staticmap?center="
-        + location.address
-        + "&zoom=14&markers="
-        + location.address
-        + "&size=400x400&key="
-        + current_app.config["MAP_KEY"]
-    )
+    link, google = maps(location)
     _day, _time = parse_date_as_string(date)
     form = SignUp()
     if form.validate_on_submit():
@@ -179,4 +177,5 @@ def my_appointment(locationid, date, request_time, aS_id):
         locations=locations,
         location=location,
         google=google,
+        link=link
     )

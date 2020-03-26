@@ -31,6 +31,8 @@
 </div>
 {% endblock %}
 {% block sidebar %}
-<img class='border border-dark' src="{{ google }}" alt="Address provided by Google">
-
+<img class='border border-dark' src="{{ google }}" alt="Address provided by Google" href="{{ google }}">
+<div class='content-section'>
+<a href="{{ link }}" target="_blank">Open in new tab</a>
+</div>
 {% endblock %}

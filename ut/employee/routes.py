@@ -33,14 +33,6 @@ employee = Blueprint("employee", __name__, template_folder="employee_templates")
 def e_home():
     "The employee home page"
     locations = Location.query.all()
-    "Display Employees"
-    es = Employee.query.all()
-    print(es)
-
-    "Display Active Users"
-    users = Employee.query.filter_by(is_active=True).all()
-    print(users)
-    print(current_user)
     form = SignUp()
     if form.validate_on_submit():
         flash("Form Submission was complete!", "success")
@@ -52,6 +44,12 @@ def e_home():
         legend="Sign Up Caller Now",
     )
 
+@employee.route('/employee/pendingappointments', methods=["GET", "POST"])
+@login_required
+def pending_appointments():
+  locations = Location.query.all()
+  appointments = Appointment.query.all()
+  return render_template('e_pendingappt.html', title='Patients needing confirmations', appointments=appointments, locations=locations, loc=Location)
 
 @employee.route("/location/<int:locationid>", methods=["GET", "POST"])
 @login_required
@@ -217,7 +215,7 @@ def logout():
     return redirect(url_for("employee.login"))
 
 
-@employee.route("/about")
+@employee.route("/employee/about")
 @login_required
-def about():
+def e_about():
     return render_template("e_about.html")

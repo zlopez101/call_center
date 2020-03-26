@@ -8,5 +8,6 @@ DB considerations:
 
 Twilio Considerations:
   1. Need to upgrade account to implement fax resource
-  2. 
+  2. click to call functionality
+  3. appointment reminders
 
