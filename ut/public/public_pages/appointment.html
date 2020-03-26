@@ -1,18 +1,24 @@
 {% extends 'layout.html' %}
 {% block content %}
 <table class="table table-hover">
-    <thead>
+    <thead class='sticky-top'>
         <tr>
             <th scope="col">Time</th>
             {% for date in dates %}
-            <th scope="col">{{date}}</th>
+            <th scope="col">{{date.strftime("%A, %B %d")}}</th>
             {% endfor %}
         </tr>
     </thead>
     <tbody>
         {% for time in time_table.keys()  %}
         <tr>
-            <th scope="row">{{ time.hour }} : {{ time.minute }}</th>
+            <th scope="row">
+                {% if time.minute==0 %}
+                {{ time.strftime('%I') }}:00{{time.strftime("%p")}}
+                {% else %}
+                {{ time.strftime('%I') }}:{{ time.minute }}{{time.strftime("%p")}}
+                {% endif %}
+            </th>
             {%for aS in time_table[time] %}
             {% for aS_  in aS%}
             {% if aS_.slot_1 == False%}

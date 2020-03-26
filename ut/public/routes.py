@@ -1,11 +1,7 @@
 from flask import render_template, Blueprint, flash, redirect, url_for
 from ut.models import Location, Appointment, Patient, Employee, AppointmentSlot
 from ut.public.forms import SignUp, CheckApt
-from ut.public.utils import (
-    create_times,
-    create_table_dict,
-    parse_date_as_string,
-)
+from ut.public.utils import create_times, create_table_dict, parse_date_as_string
 from ut import db
 import datetime
 import numpy as np
@@ -18,6 +14,18 @@ public = Blueprint("public", __name__, template_folder="public_pages")
 def home():
     locations = Location.query.all()
     return render_template("welcome.html", locations=locations)
+
+
+@public.route("/about")
+def about():
+    locations = Location.query.all()
+    return render_template("about.html", locations=locations)
+
+
+@public.route("/insurance_and_COVID19")
+def insurance():
+    locations = Location.query.all()
+    return render_template("insurance.html", locations=locations)
 
 
 @public.route("/<int:locationid>", methods=["GET", "POST"])
@@ -36,8 +44,6 @@ def samplelocation(locationid):
         date_and_time = datetime.datetime.combine(
             date, datetime.time(hour=8, minute=0, second=0)
         )
-        print(type(date_and_time))
-        print(date_and_time)
         return redirect(
             url_for(
                 "public.samplelocation_with_date",
@@ -73,8 +79,11 @@ def samplelocation_with_date(locationid, date):
         date, date + datetime.timedelta(days=5), dtype="datetime64[D]"
     )
     table_times = create_times()
-
+    print(type(table_times[0]))
     time_table = create_table_dict(appointmentslots, table_times, table_dates)
+    table_dates = np.datetime_as_string(table_dates)
+    # print(table_dates)
+    table_dates = [datetime.datetime.strptime(date, "%Y-%m-%d") for date in table_dates]
     # print(type((appointmentslots[1].date_time.strftime("%m/%d, %H:%M"))))
     return render_template(
         "appointment.html",
