@@ -90,3 +90,12 @@
     </form>
 </div>
 {% endblock %}
+{% block sidebar %}
+<div class='content-section'>
+    <h3>{{ location.name }}</h3>
+    <p> {{location.address }}</p>
+
+</div>
+<img class='border border-dark' src="{{ google }}" alt="Address provided by Google">
+
+{% endblock %}

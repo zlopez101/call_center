@@ -3,7 +3,7 @@
 <div class='content-section'>
 	<h3>{{ location.name }}</h3>
 	<p> {{location.address }}</p>
-	<p text='muted'><a href="#">google</a></p>
+
 </div>
 <div class="content-section">
 	<form method="POST" action="">
@@ -29,4 +29,8 @@
 		</div>
 	</form>
 </div>
+{% endblock %}
+{% block sidebar %}
+<img class='border border-dark' src="{{ google }}" alt="Address provided by Google">
+
 {% endblock %}
