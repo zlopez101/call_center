@@ -1,26 +1,12 @@
-def add_user(userid):
-    pass
+from ut.models import Location
 
+def create_location_list():
+  locations = Location.query.all()
+  return locations
 
-"""
-  c = list(logged_on_employees_call_center_dict.values())
-  ld = {}
-  c.append(userid)
-  for i, value in enumerate(c):
-    ld[i] = value
-  return ld
-"""
-
-
-def remove_user(userid):
-    pass
-
-
-"""
-  c = list(logged_on_employees_call_center_dict.values())
-  ld = {}
-  c.remove(userid)
-  for i, value in enumerate(c):
-    ld[i, value]
-  return ld
-"""
+def create_location_dictionary():
+  location_dict = {}
+  locations = Location.query.all()
+  for location in locations:
+    location_dict[location.id] = location.name
+  return location_dict

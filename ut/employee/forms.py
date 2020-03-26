@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField, SubmitField, PasswordField
+from wtforms.fields import StringField, SubmitField, PasswordField, SelectField, DateField, DateTimeField, BooleanField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError
 from ut.models import Employee
-
+from datetime import datetime
 
 def ut_email(check="uth.tmc.edu"):
     message = f"Must be a {check} email address"
@@ -44,4 +44,34 @@ class LoginForm_db_not_formed(FlaskForm):
 	first = StringField("First Name", validators=[DataRequired()])
 	last = PasswordField('Last Name', validators=[DataRequired()])
 	submit = SubmitField('Submit')
+
+class SelectApt(FlaskForm):
+  location = SelectField('Location', coerce=int)
+  date = DateField('Date', format="%m/%d",  validators=[DataRequired()])
+  submit = SubmitField('Submit')
+
+class PatientData(FlaskForm):
+  first = StringField("First Name", validators=[DataRequired()])
+	last = PasswordField('Last Name', validators=[DataRequired()])
+  date_of_birth = DateField("DOB", format="%m/%d/%Y", validators=[DataRequired()])
+  language = SelectField(
+        "Language",
+        validators=[DataRequired()],
+        coerce=int,
+        choices=[
+            (1, "English"),
+            (2, "Spanish"),
+            (3, "French"),
+            (4, "Chinese"),
+            (5, "Korean"),
+        ],
+    )
+  phone_number = StringField("Phone number", validators=[DataRequired()])
+  email = StringField("Email Address", validators=[DataRequired()])
+  confirmed = BooleanField('Confirmed?', validators=[DataRequired()])
+  referring_provider = StringField('Referring Provider')
+  referral_number = StringField('Referral Number')
+  appointment_time = DateTimeField('Appointment Time')
+  appointment_location = SelectField('Location', coerce=int)
+  submit = SubmitField('Submit')
 

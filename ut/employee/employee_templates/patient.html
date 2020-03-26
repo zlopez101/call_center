@@ -1,0 +1,196 @@
+{% extends "e_layout.html" %}
+{% block content %}
+<div class="content-section">
+	<form method="POST" action="">
+		{{ form.hidden_tag() }}
+		<fieldset class="form-group">
+			<legend class="border-bottom mb-4">{{ legend }}</legend>
+			<div class="form-group">
+				{{ form.first.label(class="form-control-label") }}
+				{% if form.first.errors %}
+				{{ form.first(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.first.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.first(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.last.label(class="form-control-label") }}
+				{% if form.last.errors %}
+				{{ form.last(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.last.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.last(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.date_of_birth.label(class="form-control-label") }}
+				{% if form.date_of_birth.errors %}
+				{{ form.date_of_birth(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.date_of_birth.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.date_of_birth(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.language.label(class="form-control-label") }}
+				{% if form.language.errors %}
+				{{ form.language(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.language.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.language(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.phone_number.label(class="form-control-label") }}
+				{% if form.phone_number.errors %}
+				{{ form.phone_number(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.phone_number.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.phone_number(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.email.label(class="form-control-label") }}
+				{% if form.email.errors %}
+				{{ form.email(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.email.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.email(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.confirmed.label(class="form-control-label") }}
+				{% if form.confirmed.errors %}
+				{{ form.confirmed(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.confirmed.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.confirmed(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.referring_provider.label(class="form-control-label") }}
+				{% if form.referring_provider.errors %}
+				{{ form.referring_provider(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.referring_provider.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.referring_provider(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.referral_number.label(class="form-control-label") }}
+				{% if form.referral_number.errors %}
+				{{ form.referral_number(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.referral_number.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.referral_number(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.appointment_time.label(class="form-control-label") }}
+				{% if form.appointment_time.errors %}
+				{{ form.appointment_time(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.appointment_time.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.appointment_time(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.appointment_location.label(class="form-control-label") }}
+				{% if form.appointment_location.errors %}
+				{{ form.appointment_location(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.appointment_location.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.appointment_location(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+		</fieldset>
+		<div class="form-group">
+			{{ form.submit(class="btn btn-outline-info") }}
+		</div>
+	</form>
+</div
+{% endblock %}
+{% block sidebar%}
+<div class="content-section">
+	<form method="POST" action="">
+		{{ side_form.hidden_tag() }}
+		<fieldset class="form-group">
+			<legend class="border-bottom mb-4">{{ legend }}</legend>
+			<div class="form-group">
+				{{ side_form.location.label(class="form-control-label") }}
+				{% if side_form.location.errors %}
+				{{ side_form.location(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in side_form.location.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ side_form.location(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ side_form.date.label(class="form-control-label") }}
+				{% if side_form.date.errors %}
+				{{ side_form.date(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in side_form.date.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ side_form.date(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+		</fieldset>
+		<div class="form-group">
+			{{ form.submit(class="btn btn-outline-info") }}
+		</div>
+	</form>
+</div
+{% endblock %}

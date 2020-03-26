@@ -1,33 +1,110 @@
 {% extends "e_layout.html" %}
 {% block content %}
-<table class="table">
+<div class='content-section'>
+  <h3>{{loc.name}}</h3>
+</div>
+<table class="table table-bordered">
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">First Name</th>
-      <th scope="col">Last Name</th>
+      <th scope="col">Name</th>
       <th scope="col">DOB</th>
-      <th scope="col">phone</th>
-      <th scope="col">confirmed</th>
-      <th scope="col">Scheduled</th>
-      <th scope="col">Location</th>
-      <th scope="col">status</th>
+      <th scope="col">Phone #</th>
+      <th scope="col">Confirmed?</th>
+      <th scope="col">Schedule Date</th>
+      <th scope="col">Referral</th>
+      <th scope="col">Referral #</th>
     </tr>
   </thead>
   <tbody>
-    {% for appointment in appointments %}
-    <tr>
-      <th scope="row">{{ appointment.id}}</th>
-      <td>@mdo</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-      <td>{{ loc.query(filter_by=appointment.location_id).first().name }}</td>
-      <td>{{ appointment.status }}</td>
+    {% for appointment in appointment_with_patient %}
+    {% if appointment[0].status.value == "Pending" %}
+    <tr class='table-warning'>
+      <th scope="row">{{ appointment[0].id}}</th>
+      <td>{{appointment[1].first}} {{appointment[1].last}}</td>
+      <td>{{ appointment[1].dob.strftime("%m-%d-%Y") }}</td>
+      <td>{{appointment[1].phone}}</td>
+      <td>{{appointment[1].confirmed}}</td> 
+      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
     </tr>
+    {% elif appointment[0].status.value == "Complete" %}
+    <tr class='table-success'>
+      <th scope="row">{{ appointment[0].id}}</th>
+      <td>{{appointment[1].first}} {{appointment[1].last}}</td>
+      <td>{{ appointment[1].dob.strftime("%m-%d-%Y") }}</td>
+      <td>{{appointment[1].phone}}</td>
+      <td>{{appointment[1].confirmed}}</td> 
+      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+    </tr>
+    {% elif appointment[0].status.value == "No show"%}
+    <tr class='table-danger'>
+      <th scope="row">{{ appointment[0].id}}</th>
+      <td>{{appointment[1].first}} {{appointment[1].last}}</td>
+      <td>{{ appointment[1].dob.strftime("%m-%d-%Y") }}</td>
+      <td>{{appointment[1].phone}}</td>
+      <td>{{appointment[1].confirmed}}</td> 
+      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+    </tr>
+    {% else %}
+    <tr class='table-danger'>
+      <th scope="row">{{ appointment[0].id}}</th>
+      <td>{{appointment[1].first}} {{appointment[1].last}}</td>
+      <td>{{ appointment[1].dob.strftime("%m-%d-%Y") }}</td>
+      <td>{{appointment[1].phone}}</td>
+      <td>{{appointment[1].confirmed}}</td> 
+      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+    </tr>
+    
+    {% endif %}
+    
     {% endfor %}
   </tbody>
 </table>
+{% endblock %}
+{% block sidebar %}
+<div class="content-section">
+	<form method="POST" action="">
+		{{ form.hidden_tag() }}
+		<fieldset class="form-group">
+			<legend class="border-bottom mb-4">{{ legend }}</legend>
+			<div class="form-group">
+				{{ form.location.label(class="form-control-label") }}
+				{% if form.location.errors %}
+				{{ form.location(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.location.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.location(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.date.label(class="form-control-label") }}
+				{% if form.date.errors %}
+				{{ form.date(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.date.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.date(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+		</fieldset>
+		<div class="form-group">
+			{{ form.submit(class="btn btn-outline-info") }}
+		</div>
+	</form>
+</div
 {% endblock %}

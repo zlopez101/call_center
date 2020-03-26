@@ -145,6 +145,7 @@ def my_appointment(locationid, date, request_time, aS_id):
 
         "Creating the new Appointment"
         web_employee = Employee.query.filter_by(first="Web").first()
+        print(locationid)
         new_appointment = Appointment(
             created_by=web_employee.id,
             date_created=datetime.datetime.utcnow(),

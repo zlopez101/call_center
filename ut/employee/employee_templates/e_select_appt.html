@@ -1,16 +1,24 @@
-{% extends 'layout.html' %}
+{% extends "e_layout.html" %}
 {% block content %}
-<div class='content-section'>
-	<h3>{{ location.name }}</h3>
-	<p> {{location.address }}</p>
-
-</div>
 <div class="content-section">
 	<form method="POST" action="">
 		{{ form.hidden_tag() }}
 		<fieldset class="form-group">
 			<legend class="border-bottom mb-4">{{ legend }}</legend>
 			<div class="form-group">
+				{{ form.location.label(class="form-control-label") }}
+				{% if form.location.errors %}
+				{{ form.location(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.location.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.location(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
 				{{ form.date.label(class="form-control-label") }}
 				{% if form.date.errors %}
 				{{ form.date(class="form-control form-control-lg is-invalid") }}
@@ -29,10 +37,4 @@
 		</div>
 	</form>
 </div
-{% endblock %}
-{% block sidebar %}
-<img class='border border-dark' src="{{ google }}" alt="Address provided by Google" href="{{ google }}">
-<div class='content-section'>
-<a href="{{ link }}" target="_blank">Open in new tab</a>
-</div>
 {% endblock %}
