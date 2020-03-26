@@ -6,10 +6,10 @@ from ut.config import Config
 
 # for db updating...
 
-#app = Flask(__name__)
-#app.config.from_object(Config)
-#db = SQLAlchemy(app)
-#login_manager = LoginManager(app)
+# app = Flask(__name__)
+# app.config.from_object(Config)
+# db = SQLAlchemy(app)
+# login_manager = LoginManager(app)
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -17,7 +17,6 @@ login_manager = LoginManager()
 login_manager.login_view = "employee.login"
 login_manager.login_message_category = "info"
 
-logged_on_employees_call_center_dict = {}
 
 def create_app(config_class=Config):
     app = Flask(__name__)

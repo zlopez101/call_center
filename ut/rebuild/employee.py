@@ -4,7 +4,7 @@ from ut.models import Employee
 
 z = Employee(first='Zachary', last='Lopez', password='password', username='Zachary.Lopez@uth.tmc.edu', email="Zachary.Lopez@uth.tmc.edu")
 def create_employees():
-	names = [
+    names = [
     "Weinert Donna Donna.M.Weinert@uth.tmc.edu",
     "Vasquez Corina Corina.Arizpe@uth.tmc.edu",
     "Armstrong Madeline Madeline.C.Armstrong@uth.tmc.edu",
@@ -21,15 +21,14 @@ def create_employees():
     "Villatoro Mercedes Mercedes.Villatoro@uth.tmc.edu",
     'Center Call noemail', 
     'Site Web noemail'
-	]
-
-	for name in names:
-    lst = name.split(" ")
-    add = Employee(first=lst[1], last=lst[0], email=lst[2], username=lst[2], password='password')
-    db.session.add(add)
-    db.session.commit()
-    print(f"{lst[0]} {lst[-1]} added")
-	return "Success"
+    ]
+    for name in names:
+        lst = name.split(" ")
+        add = Employee(first=lst[1], last=lst[0], email=lst[2], username=lst[2], password='password')
+        db.session.add(add)
+        db.session.commit()
+        print(f"{lst[0]} {lst[-1]} added")
+    return "Success"
 
 
 

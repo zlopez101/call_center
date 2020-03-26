@@ -1,11 +1,26 @@
-from flask import render_template, Blueprint, flash, redirect, url_for, request, current_app
+from flask import (
+    render_template,
+    Blueprint,
+    flash,
+    redirect,
+    url_for,
+    request,
+    current_app,
+)
 from ut.employee.forms import RegisterForm, LoginForm_db_not_formed
 from ut.employee.utils import add_user, remove_user
 from flask_login import current_user, login_required, login_user, logout_user
-from ut.models import Employee, Location, AppointmentSlot, Patient, Appointment
+from ut.models import (
+    Employee,
+    Location,
+    AppointmentSlot,
+    Patient,
+    Appointment,
+    ActiveUser,
+)
 from ut.public.forms import SignUp, CheckApt
 from ut.public.utils import parse_date_as_string, create_times, create_table_dict
-from ut import db, logged_on_employees_call_center_dict
+from ut import db
 import datetime as dt
 import numpy as np
 
@@ -16,9 +31,15 @@ employee = Blueprint("employee", __name__, template_folder="employee_templates")
 @employee.route("/employee_home", methods=["GET", "POST"])
 @login_required
 def e_home():
-    
+    "The employee home page"
     locations = Location.query.all()
-    print(current_app.logged_on_employees_call_center_dict)
+    "Display Employees"
+    es = Employee.query.all()
+    print(es)
+
+    "Display Active Users"
+    users = Employee.query.filter_by(is_active=True).all()
+    print(users)
     print(current_user)
     form = SignUp()
     if form.validate_on_submit():
@@ -160,10 +181,12 @@ def login():
         if employee:
             login_user(employee)
             next_page = request.args.get("next")
-            current_app.logged_on_employees_call_center_dict = add_user(employee.id)
-            print(current_app.logged_on_employees_call_center_dict)
+            employee.is_active = True
+            db.session.commit()
             return (
-                redirect(next_page) if next_page else redirect(url_for("employee.e_home"))
+                redirect(next_page)
+                if next_page
+                else redirect(url_for("employee.e_home"))
             )
         else:
             flash("Login Unsuccessful", "danger")
@@ -187,7 +210,9 @@ def register():
 @employee.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
-    current_app.logged_on_employees_call_center_dict = remove_user(current_user.id)
+    logging_out_employee = Employee.query.filter_by(id=current_user.id).first()
+    logging_out_employee.is_active = False
+    db.session.commit()
     logout_user()
     return redirect(url_for("employee.login"))
 

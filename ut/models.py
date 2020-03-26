@@ -29,7 +29,6 @@ class AppointmentSlot(db.Model):
         return f'{self.id} at {self.location_id} on {datetime.strftime(self.date_time, "%m/%d %H:%M")}'
 
 
-
 class Appointment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
@@ -42,10 +41,10 @@ class Appointment(db.Model):
     cancel_reason = db.Column(db.String(), default="")
 
     def complete_status(self):
-      self.status = "COMPLETE"
-    
+        self.status = "COMPLETE"
+
     def cancel_appointment(self):
-      self.status = "CANCELLED"
+        self.status = "CANCELLED"
 
     def __repr__(self):
         return f"Appointment(patient {self.patient_scheduled} scheduled for {self.schedule_date_time}"
@@ -54,11 +53,12 @@ class Appointment(db.Model):
 class Employee(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key=True)
-    username =  db.Column(db.String())
-    email =  db.Column(db.String())
-    password =  db.Column(db.String())
+    username = db.Column(db.String())
+    email = db.Column(db.String())
+    password = db.Column(db.String())
     first = db.Column(db.String())
     last = db.Column(db.String())
+    is_active = db.Column(db.Boolean, default=False)
     scheduled = db.relationship("Appointment", backref="scheduler", lazy=True)
 
     def __repr__(self):
@@ -75,12 +75,12 @@ class Patient(db.Model):
     email = db.Column(db.String())
     lang = db.Column(db.String())
     ins = db.Column(db.String())
-    confirmed = db.Column(db.Boolean)
+    confirmed = db.Column(db.Boolean, default=False)
     appointment = db.relationship("Appointment", backref="patient", lazy=True)
 
     def confirm_patient_creation(self, expires_in=1800):
-      s = Serializer(current_app.config["SECRET_KEY"], expires_in)
-      return s.dumps({"patient_id": self.id}).decode("utf-8")
+        s = Serializer(current_app.config["SECRET_KEY"], expires_in)
+        return s.dumps({"patient_id": self.id}).decode("utf-8")
 
     @staticmethod
     def verify_patient(token):
@@ -104,3 +104,9 @@ class Location(db.Model):
 
     def __repr__(self):
         return f"Location({self.name})"
+
+
+class ActiveUser(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String())
+    # employee_id = db.Column(db.Integer, db.ForeignKey("employee.id"))
