@@ -1,5 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField, SubmitField, DateField, SelectField
+from wtforms.fields import (
+    StringField,
+    SubmitField,
+    DateField,
+    SelectField,
+    BooleanField,
+)
 from wtforms.validators import DataRequired
 
 
@@ -62,6 +68,11 @@ class SignUp(FlaskForm):
     # Zip = StringField("Zip code", validators=[DataRequired()])
     phone_number = StringField("Phone number", validators=[DataRequired()])
     email = StringField("Email Address", validators=[DataRequired()])
+    current_ut_patient = BooleanField("Are you a current UT physicians patient")
+    referring_provider = StringField(
+        "Provider that referred you for testing", validators=[DataRequired()]
+    )
+    referral = StringField("Referral Id", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 

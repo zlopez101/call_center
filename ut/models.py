@@ -14,8 +14,9 @@ def load_user(user_id):
 class Status(enum.Enum):
     PENDING = "Pending"
     COMPLETE = "Complete"
-    NO_SHOW = "No show"
+    CONFIRMED = "Confirmed"
     CANCELLED = "Cancelled"
+    NO_SHOW = "No show"
 
 
 class AppointmentSlot(db.Model):
@@ -76,7 +77,10 @@ class Patient(db.Model):
     lang = db.Column(db.String())
     ins = db.Column(db.String())
     confirmed = db.Column(db.Boolean, default=False)
+    current_patient = db.Column(db.Boolean, default=False)
     appointment = db.relationship("Appointment", backref="patient", lazy=True)
+    referring_provider = db.Column(db.String())
+    referral_id = db.Column(db.String())
 
     def confirm_patient_creation(self, expires_in=1800):
         s = Serializer(current_app.config["SECRET_KEY"], expires_in)
@@ -101,12 +105,8 @@ class Location(db.Model):
     name = db.Column(db.String())
     address = db.Column(db.String())
     appointments = db.relationship("Appointment", backref="location", lazy=True)
+    latitude = db.Column(db.String())
+    longitude = db.Column(db.String())
 
     def __repr__(self):
         return f"Location({self.name})"
-
-
-class ActiveUser(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String())
-    # employee_id = db.Column(db.Integer, db.ForeignKey("employee.id"))

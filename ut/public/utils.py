@@ -3,10 +3,10 @@ import os
 from ut.models import Location
 from flask import current_app
 
-
+# create map url
 def maps(location):
-  link = "https://www.google.com/maps/place/"+location.address
-  google = (
+    link = "https://www.google.com/maps/place/" + location.address
+    google = (
         "https://maps.googleapis.com/maps/api/staticmap?center="
         + location.address
         + "&zoom=13&markers="
@@ -14,7 +14,7 @@ def maps(location):
         + "&size=300x300&key="
         + current_app.config["MAP_KEY"]
     )
-  return link, google
+    return link, google
 
 
 # build days for AppointmentSlot
@@ -49,6 +49,7 @@ def build_times():
     return datetime_dct
 
 
+# create times for AppointmentSlot
 def create_times():
     time_start = dt.datetime.strptime("08:00:00", "%H:%M:%S")
     times = []
@@ -61,6 +62,7 @@ def create_times():
     return times
 
 
+# create dictionary with times as keys for table data
 def create_table_dict(appointmentslots, table_times, table_dates):
     time_table = {}
     # match appointment to their time and date
@@ -81,10 +83,9 @@ def create_table_dict(appointmentslots, table_times, table_dates):
     return time_table
 
 
+# work with datetime as string -> date as string, time as string
 def parse_date_as_string(_date_as_string):
     "This function returns two strings, 1 is the date and 1 is the time"
     _day = _date_as_string.split(" ")[0]
     _time = _date_as_string.split(" ")[-1]
     return _day, _time
-
-

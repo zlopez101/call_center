@@ -1,12 +1,10 @@
 from flask import Blueprint, redirect, url_for, flash, render_template
 from ut.confirmations.view_helpers import send_confirm_text, parse_date_as_string
 from ut.models import Patient, Location
+from ut import db
 
 
-
-confirmations = Blueprint(
-    "confirmations", __name__
-)
+confirmations = Blueprint("confirmations", __name__)
 
 
 @confirmations.route(
@@ -24,17 +22,20 @@ def confirm_appointment(locationid, patientid, date, _fom):
 
     send_confirm_text("+17134306973", message_string)
     flash("Confirmation Text has been sent!", "success")
-    if _fom=='public':
+    if _fom == "public":
         return redirect(url_for("public.home"))
-    else: 
+    else:
         return redirect(url_for("employee.e_home"))
 
 
-@confirmations.route("/confirm_appointment_creation/<token>", methods=['GET', 'POST'])
+@confirmations.route("/confirm_appointment_creation/<token>", methods=["GET", "POST"])
 def confirm_appointment_creation(token):
-  patient = Patient.verify_patient(token)
-  if patient is None:
-    flash('That is an invalid or expired token', 'warning')
-    return redirect(url_for('public.home'))
-  flash('Thanks for confirming your appointment!',"success")
-  return redirect(url_for('public.home'))
+    patient = Patient.verify_patient(token)
+    if patient is None:
+        flash("That is an invalid or expired token", "warning")
+        return redirect(url_for("public.home"))
+    flash("Thanks for confirming your appointment!", "success")
+    patient.confirmed = True
+    db.session.commit()
+    return redirect(url_for("public.home"))
+

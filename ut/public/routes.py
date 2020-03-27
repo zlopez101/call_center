@@ -1,4 +1,12 @@
-from flask import render_template, Blueprint, flash, redirect, url_for, current_app, json
+from flask import (
+    render_template,
+    Blueprint,
+    flash,
+    redirect,
+    url_for,
+    current_app,
+    json,
+)
 from ut.models import Location, Appointment, Patient, Employee, AppointmentSlot
 from ut.public.forms import SignUp, CheckApt
 from ut.public.utils import create_times, create_table_dict, parse_date_as_string, maps
@@ -8,23 +16,21 @@ import numpy as np
 
 
 public = Blueprint("public", __name__, template_folder="public_pages")
-@public.route('/api/locations_json')
+
+
+@public.route("/api/locations_json")
 def api_get_location():
-  return {
-     "type":"Feature",
-      "geometry": {
-        "type":"Point",
-        "coordinates":[29.6268071,-95.1417869]
-      }, 
-      "properties":{
-        "name":"Bayshore MultiSpeciality"
-      }
-  }
+    return {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [29.6268071, -95.1417869]},
+        "properties": {"name": "Bayshore MultiSpeciality"},
+    }
+
 
 @public.route("/")
 def home():
     locations = Location.query.all()
-    key = current_app.config['MAP_KEY']
+    key = current_app.config["MAP_KEY"]
     return render_template("welcome.html", locations=locations, key=key)
 
 
@@ -73,7 +79,7 @@ def samplelocation(locationid):
         legend="Pick a date to check appointment availability",
         google=google,
         locations=locations,
-        link=link
+        link=link,
     )
 
 
@@ -138,6 +144,9 @@ def my_appointment(locationid, date, request_time, aS_id):
             phone=form.phone_number.data,
             email=form.email.data,
             lang=form.language.data,
+            current_patient=form.current_ut_patient.data,
+            referring_provider=form.referring_provider.data,
+            referral_id=form.referral.data,
         )
         db.session.add(new_patient)
         aS.slot_1 = True
@@ -145,7 +154,6 @@ def my_appointment(locationid, date, request_time, aS_id):
 
         "Creating the new Appointment"
         web_employee = Employee.query.filter_by(first="Web").first()
-        print(locationid)
         new_appointment = Appointment(
             created_by=web_employee.id,
             date_created=datetime.datetime.utcnow(),
@@ -178,5 +186,5 @@ def my_appointment(locationid, date, request_time, aS_id):
         locations=locations,
         location=location,
         google=google,
-        link=link
+        link=link,
     )
