@@ -12,14 +12,14 @@
       <th scope="col">Phone #</th>
       <th scope="col">Confirmed?</th>
       <th scope="col">Schedule Date</th>
-      <th scope="col">Referral</th>
+      <th scope="col">Referring Provider</th>
       <th scope="col">Referral #</th>
     </tr>
   </thead>
   <tbody>
     {% for appointment in appointment_with_patient %}
     {% if appointment[0].status.value == "Pending" %}
-    <tr class='table-warning'>
+    <tr id='apptTableRow' class='table-warning'>
       <th scope="row">{{ appointment[0].id}}</th>
       <td><a
           href="{{ url_for('employee.patient_inquiry', locationid=loc.id, patientid=appointment[1].id, _date=_date) }}">{{appointment[1].first}}
@@ -28,11 +28,11 @@
       <td>{{appointment[1].phone}}</td>
       <td>{{appointment[1].confirmed}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
-      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
-      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+      <td>{{appointment[1].referring_provider}}</td>
+      <td>{{appointment[1].referral_id}}</td>
     </tr>
     {% elif appointment[0].status.value == "Complete" %}
-    <tr class='table-success'>
+    <tr id='apptTableRow' class='table-success'>
       <th scope="row">{{ appointment[0].id}}</th>
       <td><a
           href="{{ url_for('employee.patient_inquiry', locationid=loc.id, patientid=appointment[1].id, _date=_date) }}">{{appointment[1].first}}
@@ -41,11 +41,11 @@
       <td>{{appointment[1].phone}}</td>
       <td>{{appointment[1].confirmed}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
-      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
-      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+      <td>{{appointment[1].referring_provider}}</td>
+      <td>{{appointment[1].referral_id}}</td>
     </tr>
     {% elif appointment[0].status.value == "No show"%}
-    <tr class='table-danger'>
+    <tr id='apptTableRow' class='table-danger'>
       <th scope="row">{{ appointment[0].id}}</th>
       <td><a
           href="{{ url_for('employee.patient_inquiry', locationid=loc.id, patientid=appointment[1].id, _date=_date) }}">{{appointment[1].first}}
@@ -54,11 +54,11 @@
       <td>{{appointment[1].phone}}</td>
       <td>{{appointment[1].confirmed}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
-      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
-      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+      <td>{{appointment[1].referring_provider}}</td>
+      <td>{{appointment[1].referral_id}}</td>
     </tr>
     {% else %}
-    <tr class='table-danger'>
+    <tr id='apptTableRow' class='table-danger'>
       <th scope="row">{{ appointment[0].id}}</th>
       <td><a
           href="{{ url_for('employee.patient_inquiry', locationid=loc.id, patientid=appointment[1].id, _date=_date) }}">{{appointment[1].first}}
@@ -67,8 +67,8 @@
       <td>{{appointment[1].phone}}</td>
       <td>{{appointment[1].confirmed}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
-      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
-      <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
+      <td>{{appointment[1].referring_provider}}</td>
+      <td>{{appointment[1].referral_id}}</td>
     </tr>
 
     {% endif %}

@@ -131,6 +131,7 @@ def patient_inquiry(patientid, locationid, _date):
             f"Succesfully updated {patient.first} {patient.last}'s appointment. Thanks for your hard work!",
             "success",
         )
+
         return redirect(
             url_for("employee.pending_appointments", locationid=locationid, _date=_date)
         )
@@ -141,6 +142,8 @@ def patient_inquiry(patientid, locationid, _date):
     form.email.data = patient.email
     form.language.data = patient.lang
     form.confirmed.data = patient.confirmed
+    form.referring_provider.data = patient.referring_provider
+    form.referral_number.data = patient.referral_id
     form.appointment_location.data = (
         Location.query.filter_by(id=locationid).first().name
     )
