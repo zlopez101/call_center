@@ -3,7 +3,7 @@ const user_submit = document.getElementById('userSubmit');
 const bigWelcome = document.getElementById('bigWelcomeContainer')
 const resultMap = document.getElementById('resultMap');
 const resultContainer = document.getElementById("resultContainer");
-$('.toast').toast(option)
+
 //user_submit.addEventListener('click', function() {
 //  console.log('successfully found the input key!');
 //  console.log(user_input.value);

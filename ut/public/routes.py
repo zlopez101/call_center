@@ -130,6 +130,7 @@ def samplelocation_with_date(locationid, date):
 def my_appointment(locationid, date, request_time, aS_id):
     locations = Location.query.all()
     aS = AppointmentSlot.query.filter_by(id=aS_id).first()
+    print(aS)
     location = Location.query.filter_by(id=locationid).first()
     request_date_as_datetime = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
     link, google = maps(location)
@@ -145,11 +146,8 @@ def my_appointment(locationid, date, request_time, aS_id):
             email=form.email.data,
             lang=form.language.data,
             current_patient=form.current_ut_patient.data,
-            referring_provider=form.referring_provider.data,
-            referral_id=form.referral.data,
         )
         db.session.add(new_patient)
-        aS.slot_1 = True
         db.session.commit()
 
         "Creating the new Appointment"
@@ -161,8 +159,15 @@ def my_appointment(locationid, date, request_time, aS_id):
             location_id=locationid,
             schedule_date_time=request_date_as_datetime,
             status="PENDING",
+            referring_provider = form.referring_provider.data,
+            referral_id = form.referral.data,
         )
         db.session.add(new_appointment)
+        db.session.commit()
+
+        "Filling Appointment Slot"
+        aS.slot_1 = True
+        aS.slot_1_appointment = new_appointment.id
         db.session.commit()
 
         flash(

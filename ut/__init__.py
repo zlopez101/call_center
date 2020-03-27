@@ -6,10 +6,12 @@ from ut.config import Config
 
 # for db updating...
 
-# app = Flask(__name__)
-# app.config.from_object(Config)
-# db = SQLAlchemy(app)
-# login_manager = LoginManager(app)
+#app = Flask(__name__)
+#app.config.from_object(Config)
+#db = SQLAlchemy(app)
+#login_manager = LoginManager(app)
+#bcrypt = Bcrypt(app)
+
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -34,3 +36,4 @@ def create_app(config_class=Config):
     app.register_blueprint(call_center)
     app.register_blueprint(confirmations)
     return app
+

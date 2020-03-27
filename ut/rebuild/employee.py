@@ -1,10 +1,11 @@
 
-from ut import db
+from ut import db, bcrypt
 from ut.models import Employee
 
 z = Employee(first='Zachary', last='Lopez', password='password', username='Zachary.Lopez@uth.tmc.edu', email="Zachary.Lopez@uth.tmc.edu")
 def create_employees():
     names = [
+    "Lopez Zachary Zachary.Lopez@uth.tmc.edu",
     "Weinert Donna Donna.M.Weinert@uth.tmc.edu",
     "Vasquez Corina Corina.Arizpe@uth.tmc.edu",
     "Armstrong Madeline Madeline.C.Armstrong@uth.tmc.edu",
@@ -24,10 +25,10 @@ def create_employees():
     ]
     for name in names:
         lst = name.split(" ")
-        add = Employee(first=lst[1], last=lst[0], email=lst[2], username=lst[2], password='password')
+        add = Employee(first=lst[1], last=lst[0], email=lst[2], username=lst[2], password=bcrypt.generate_password_hash("password").decode("utf-8"))
         db.session.add(add)
         db.session.commit()
-        print(f"{lst[0]} {lst[-1]} added")
+        print(f"{lst[1]} {lst[0]} added")
     return "Success"
 
 

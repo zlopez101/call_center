@@ -1,0 +1,77 @@
+{% extends "e_layout.html" %}
+{% block content %}
+
+<table class="table table-hover table-responsive">
+    <thead class='sticky-top'>
+        <tr>
+            <th scope="col">Time</th>
+            {% for date in dates %}
+            <th scope="col">{{date.strftime("%A, %B %d")}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for time in time_table.keys()  %}
+        <tr>
+            <th scope="row">
+                {% if time.minute==0 %}
+                {{ time.strftime('%I') }}:00{{time.strftime("%p")}}
+                {% else %}
+                {{ time.strftime('%I') }}:{{ time.minute }}{{time.strftime("%p")}}
+                {% endif %}
+            </th>
+            {%for aS in time_table[time] %}
+            {% for aS_  in aS%}
+            {% if aS_.slot_1 == False%}
+            <td><a class="btn btn-outline-success"
+                    href="{{ url_for('employee.create_rescheduled_apt', locationid=location_id, date=aS_.date_time, request_time=time, aS_id=aS_.id) }}"
+                    role="button">Available</a></td>
+            {% else %}
+            <td><a class="btn btn-outline-danger" href="#" role="button">Taken!</a></td>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+{% block sidebar %}
+<div class="content-section">
+	<form method="POST" action="">
+		{{ form.hidden_tag() }}
+		<fieldset class="form-group">
+			<legend class="border-bottom mb-4">{{ legend }}</legend>
+			<div class="form-group">
+				{{ form.location.label(class="form-control-label") }}
+				{% if form.location.errors %}
+				{{ form.location(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.location.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.location(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.date.label(class="form-control-label") }}
+				{% if form.date.errors %}
+				{{ form.date(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+>					{% for error in form.date.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.date(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+		</fieldset>
+		<div class="form-group">
+			{{ form.submit(class="btn btn-outline-info") }}
+		</div>
+	</form>
+</div>
+{%endblock %}

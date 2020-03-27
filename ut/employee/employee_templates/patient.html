@@ -85,16 +85,29 @@
 				{% endif %}
 			</div>
 			<div class="form-group">
-				{{ form.confirmed.label(class="form-control-label") }}
-				{% if form.confirmed.errors %}
-				{{ form.confirmed(class="form-control form-control-lg is-invalid") }}
+				{{ form.verified_pt.label(class="form-control-label") }}
+				{% if form.verified_pt.errors %}
+				{{ form.verified_pt(class="form-control form-control-lg is-invalid") }}
 				<div class="invalid-feedback">
-					> {% for error in form.confirmed.errors %}
+					> {% for error in form.verified_pt.errors %}
 					<span>{{ error }}</span>
 					{% endfor %}
 				</div>
 				{% else %}
-				{{ form.confirmed(class="form-control form-control-lg") }}
+				{{ form.verified_pt(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+      <div class="form-group">
+				{{ form.verified_appt.label(class="form-control-label") }}
+				{% if form.verified_appt.errors %}
+				{{ form.verified_appt(class="form-control form-control-lg is-invalid") }}
+				<div class="invalid-feedback">
+					> {% for error in form.verified_appt.errors %}
+					<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+				{% else %}
+				{{ form.verified_appt(class="form-control form-control-lg") }}
 				{% endif %}
 			</div>
 			<div class="form-group">
@@ -158,12 +171,16 @@
 
 {% endblock %}
 {% block sidebar%}
-
+<div class='content-section'>
+  <h3>Delete Appointment</h3>
+  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+  Cancel Appointment</button>
+</div>
 <div class="content-section">
 	<form method="POST" action="">
 		{{ side_form.hidden_tag() }}
 		<fieldset class="form-group">
-			<legend class="border-bottom mb-4">{{ legend }}</legend>
+			<legend class="border-bottom mb-4">{{ side_legend }}</legend>
 			<div class="form-group">
 				{{ side_form.location.label(class="form-control-label") }}
 				{% if side_form.location.errors %}
@@ -191,36 +208,28 @@
 				{% endif %}
 			</div>
 		</fieldset>
-		<div class="form-group"><button type="button" class="btn btn-primary" data-toggle="modal"
-				data-target="#exampleModal">{{ side_form.submit(class="btn btn-outline-info") }}</button>s
+		<div class="form-group">{{ side_form.submit(class="btn btn-outline-info") }}
 		</div>
 	</form>
 </div>
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-	Launch demo modal
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog"
-	aria-labelledby="staticBackdropLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				...
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Understood</button>
-			</div>
-		</div>
-	</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete Appointment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Please Confirm Appointment Cancellation. This will permanently cancel the {{form.first.data}} {{form.last.data}}'s appointment. Appointment will be available for other patients to book
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <form action="{{url_for('employee.delete_appointment', locationid=location, appointmentid=appointmentid, _date=_date)}}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Cancel"></form>
+        </div>
+    </div>
+  </div>
 </div>
-
 {% endblock %}

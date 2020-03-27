@@ -39,6 +39,8 @@ class Appointment(db.Model):
     location_id = db.Column(db.Integer, db.ForeignKey("location.id"))
     schedule_date_time = db.Column(db.DateTime)
     status = db.Column(db.Enum(Status))
+    referring_provider = db.Column(db.String())
+    referral_id = db.Column(db.String())
     cancel_reason = db.Column(db.String(), default="")
 
     def complete_status(self):
@@ -79,8 +81,6 @@ class Patient(db.Model):
     confirmed = db.Column(db.Boolean, default=False)
     current_patient = db.Column(db.Boolean, default=False)
     appointment = db.relationship("Appointment", backref="patient", lazy=True)
-    referring_provider = db.Column(db.String())
-    referral_id = db.Column(db.String())
 
     def confirm_patient_creation(self, expires_in=1800):
         s = Serializer(current_app.config["SECRET_KEY"], expires_in)

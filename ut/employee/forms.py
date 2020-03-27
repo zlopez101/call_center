@@ -7,6 +7,7 @@ from wtforms.fields import (
     DateField,
     DateTimeField,
     BooleanField,
+    TextAreaField,
 )
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError
 from ut.models import Employee
@@ -55,9 +56,9 @@ class RegisterForm(FlaskForm):
   """
 
 
-class LoginForm_db_not_formed(FlaskForm):
-    first = StringField("First Name", validators=[DataRequired()])
-    last = PasswordField("Last Name", validators=[DataRequired()])
+class LoginForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 
@@ -85,9 +86,21 @@ class PatientData(FlaskForm):
     )
     phone_number = StringField("Phone number", validators=[DataRequired()])
     email = StringField("Email Address", validators=[DataRequired()])
-    confirmed = BooleanField("Confirmed?", validators=[DataRequired()])
+    verified_pt = SelectField("Patient is verified?", coerce=int, validators=[DataRequired()])
+    verified_appt = SelectField("Appointment Status", coerce=int, validators=[DataRequired()])
     referring_provider = StringField("Referring Provider")
     referral_number = StringField("Referral Number")
     appointment_time = DateTimeField("Appointment Time")
     appointment_location = SelectField("Location", coerce=int)
     submit = SubmitField("Submit")
+
+class IssueSubmit(FlaskForm):
+  title = StringField("What's the problem?", validators=[DataRequired()])
+  descript = TextAreaField('Please describe in detail', validators=[DataRequired()])
+  submit = SubmitField("Submit")
+
+class FindPatient(FlaskForm):
+  first = StringField("First Name")
+  last = StringField('Last Name')
+  date_of_birth = DateField('Date as MM/DD/YYYY', format="%m/%d/%Y", validators=[DataRequired()])
+  submit=SubmitField('Submit')

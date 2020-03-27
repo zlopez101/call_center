@@ -10,7 +10,7 @@
       <th scope="col">Name</th>
       <th scope="col">DOB</th>
       <th scope="col">Phone #</th>
-      <th scope="col">Confirmed?</th>
+      <th scope="col">Patient Active</th>
       <th scope="col">Schedule Date</th>
       <th scope="col">Referring Provider</th>
       <th scope="col">Referral #</th>
@@ -22,53 +22,53 @@
     <tr id='apptTableRow' class='table-warning'>
       <th scope="row">{{ appointment[0].id}}</th>
       <td><a
-          href="{{ url_for('employee.patient_inquiry', locationid=loc.id, patientid=appointment[1].id, _date=_date) }}">{{appointment[1].first}}
+          href="{{ url_for('employee.patient_inquiry', locationid=loc.id, appointmentid=appointment[0].id, _date=_date) }}">{{appointment[1].first}}
           {{appointment[1].last}}</a></td>
       <td>{{ appointment[1].dob.strftime("%m-%d-%Y") }}</td>
       <td>{{appointment[1].phone}}</td>
       <td>{{appointment[1].confirmed}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
-      <td>{{appointment[1].referring_provider}}</td>
-      <td>{{appointment[1].referral_id}}</td>
+      <td>{{appointment[0].referring_provider}}</td>
+      <td>{{appointment[0].referral_id}}</td>
     </tr>
-    {% elif appointment[0].status.value == "Complete" %}
+    {% elif appointment[0].status.value == "Confirmed" %}
     <tr id='apptTableRow' class='table-success'>
       <th scope="row">{{ appointment[0].id}}</th>
       <td><a
-          href="{{ url_for('employee.patient_inquiry', locationid=loc.id, patientid=appointment[1].id, _date=_date) }}">{{appointment[1].first}}
+          href="{{ url_for('employee.patient_inquiry', locationid=loc.id, appointmentid=appointment[0].id, _date=_date) }}">{{appointment[1].first}}
           {{appointment[1].last}}</a></td>
       <td>{{ appointment[1].dob.strftime("%m-%d-%Y") }}</td>
       <td>{{appointment[1].phone}}</td>
       <td>{{appointment[1].confirmed}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
-      <td>{{appointment[1].referring_provider}}</td>
-      <td>{{appointment[1].referral_id}}</td>
+      <td>{{appointment[0].referring_provider}}</td>
+      <td>{{appointment[0].referral_id}}</td>
     </tr>
-    {% elif appointment[0].status.value == "No show"%}
+    {% elif appointment[0].status.value == "Cancelled"%}
     <tr id='apptTableRow' class='table-danger'>
       <th scope="row">{{ appointment[0].id}}</th>
       <td><a
-          href="{{ url_for('employee.patient_inquiry', locationid=loc.id, patientid=appointment[1].id, _date=_date) }}">{{appointment[1].first}}
+          href="{{ url_for('employee.patient_inquiry', locationid=loc.id, appointmentid=appointment[0].id, _date=_date) }}">{{appointment[1].first}}
           {{appointment[1].last}}</a></td>
       <td>{{ appointment[1].dob.strftime("%m-%d-%Y") }}</td>
       <td>{{appointment[1].phone}}</td>
       <td>{{appointment[1].confirmed}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
-      <td>{{appointment[1].referring_provider}}</td>
-      <td>{{appointment[1].referral_id}}</td>
+      <td>{{appointment[0].referring_provider}}</td>
+      <td>{{appointment[0].referral_id}}</td>
     </tr>
     {% else %}
     <tr id='apptTableRow' class='table-danger'>
       <th scope="row">{{ appointment[0].id}}</th>
       <td><a
-          href="{{ url_for('employee.patient_inquiry', locationid=loc.id, patientid=appointment[1].id, _date=_date) }}">{{appointment[1].first}}
+          href="{{ url_for('employee.patient_inquiry', locationid=loc.id, appointmentid=appointment[0].id, _date=_date) }}">{{appointment[1].first}}
           {{appointment[1].last}}</a></td>
       <td>{{ appointment[1].dob.strftime("%m-%d-%Y") }}</td>
       <td>{{appointment[1].phone}}</td>
       <td>{{appointment[1].confirmed}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
-      <td>{{appointment[1].referring_provider}}</td>
-      <td>{{appointment[1].referral_id}}</td>
+      <td>{{appointment[0].referring_provider}}</td>
+      <td>{{appointment[0].referral_id}}</td>
     </tr>
 
     {% endif %}
@@ -114,4 +114,6 @@
       {{ form.submit(class="btn btn-outline-info") }}
     </div>
   </form>
-</div {% endblock %}
+</div>
+
+{% endblock %}
