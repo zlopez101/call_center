@@ -21,10 +21,12 @@
     {% if appointment[0].status.value == "Pending" %}
     <tr class='table-warning'>
       <th scope="row">{{ appointment[0].id}}</th>
-      <td>{{appointment[1].first}} {{appointment[1].last}}</td>
+      <td><a
+          href="{{ url_for('employee.patient_inquiry', locationid=loc.id, patientid=appointment[1].id, _date=_date) }}">{{appointment[1].first}}
+          {{appointment[1].last}}</a></td>
       <td>{{ appointment[1].dob.strftime("%m-%d-%Y") }}</td>
       <td>{{appointment[1].phone}}</td>
-      <td>{{appointment[1].confirmed}}</td> 
+      <td>{{appointment[1].confirmed}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
@@ -32,10 +34,12 @@
     {% elif appointment[0].status.value == "Complete" %}
     <tr class='table-success'>
       <th scope="row">{{ appointment[0].id}}</th>
-      <td>{{appointment[1].first}} {{appointment[1].last}}</td>
+      <td><a
+          href="{{ url_for('employee.patient_inquiry', locationid=loc.id, patientid=appointment[1].id, _date=_date) }}">{{appointment[1].first}}
+          {{appointment[1].last}}</a></td>
       <td>{{ appointment[1].dob.strftime("%m-%d-%Y") }}</td>
       <td>{{appointment[1].phone}}</td>
-      <td>{{appointment[1].confirmed}}</td> 
+      <td>{{appointment[1].confirmed}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
@@ -43,10 +47,12 @@
     {% elif appointment[0].status.value == "No show"%}
     <tr class='table-danger'>
       <th scope="row">{{ appointment[0].id}}</th>
-      <td>{{appointment[1].first}} {{appointment[1].last}}</td>
+      <td><a
+          href="{{ url_for('employee.patient_inquiry', locationid=loc.id, patientid=appointment[1].id, _date=_date) }}">{{appointment[1].first}}
+          {{appointment[1].last}}</a></td>
       <td>{{ appointment[1].dob.strftime("%m-%d-%Y") }}</td>
       <td>{{appointment[1].phone}}</td>
-      <td>{{appointment[1].confirmed}}</td> 
+      <td>{{appointment[1].confirmed}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
@@ -54,57 +60,58 @@
     {% else %}
     <tr class='table-danger'>
       <th scope="row">{{ appointment[0].id}}</th>
-      <td>{{appointment[1].first}} {{appointment[1].last}}</td>
+      <td><a
+          href="{{ url_for('employee.patient_inquiry', locationid=loc.id, patientid=appointment[1].id, _date=_date) }}">{{appointment[1].first}}
+          {{appointment[1].last}}</a></td>
       <td>{{ appointment[1].dob.strftime("%m-%d-%Y") }}</td>
       <td>{{appointment[1].phone}}</td>
-      <td>{{appointment[1].confirmed}}</td> 
+      <td>{{appointment[1].confirmed}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
       <td>{{appointment[0].schedule_date_time.strftime("%m-%d")}}</td>
     </tr>
-    
+
     {% endif %}
-    
+
     {% endfor %}
   </tbody>
 </table>
 {% endblock %}
 {% block sidebar %}
 <div class="content-section">
-	<form method="POST" action="">
-		{{ form.hidden_tag() }}
-		<fieldset class="form-group">
-			<legend class="border-bottom mb-4">{{ legend }}</legend>
-			<div class="form-group">
-				{{ form.location.label(class="form-control-label") }}
-				{% if form.location.errors %}
-				{{ form.location(class="form-control form-control-lg is-invalid") }}
-				<div class="invalid-feedback">
->					{% for error in form.location.errors %}
-					<span>{{ error }}</span>
-					{% endfor %}
-				</div>
-				{% else %}
-				{{ form.location(class="form-control form-control-lg") }}
-				{% endif %}
-			</div>
+  <form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+      <legend class="border-bottom mb-4">{{ legend }}</legend>
       <div class="form-group">
-				{{ form.date.label(class="form-control-label") }}
-				{% if form.date.errors %}
-				{{ form.date(class="form-control form-control-lg is-invalid") }}
-				<div class="invalid-feedback">
->					{% for error in form.date.errors %}
-					<span>{{ error }}</span>
-					{% endfor %}
-				</div>
-				{% else %}
-				{{ form.date(class="form-control form-control-lg") }}
-				{% endif %}
-			</div>
-		</fieldset>
-		<div class="form-group">
-			{{ form.submit(class="btn btn-outline-info") }}
-		</div>
-	</form>
-</div
-{% endblock %}
+        {{ form.location.label(class="form-control-label") }}
+        {% if form.location.errors %}
+        {{ form.location(class="form-control form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+          > {% for error in form.location.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% else %}
+        {{ form.location(class="form-control form-control-lg") }}
+        {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.date.label(class="form-control-label") }}
+        {% if form.date.errors %}
+        {{ form.date(class="form-control form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+          > {% for error in form.date.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% else %}
+        {{ form.date(class="form-control form-control-lg") }}
+        {% endif %}
+      </div>
+    </fieldset>
+    <div class="form-group">
+      {{ form.submit(class="btn btn-outline-info") }}
+    </div>
+  </form>
+</div {% endblock %}

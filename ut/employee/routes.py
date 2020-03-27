@@ -7,16 +7,15 @@ from flask import (
     request,
     current_app,
 )
-from ut.employee.forms import RegisterForm, LoginForm_db_not_formed, SelectApt, PatientData
+from ut.employee.forms import (
+    RegisterForm,
+    LoginForm_db_not_formed,
+    SelectApt,
+    PatientData,
+)
 from ut.employee.utils import create_location_list
 from flask_login import current_user, login_required, login_user, logout_user
-from ut.models import (
-    Employee,
-    Location,
-    AppointmentSlot,
-    Patient,
-    Appointment,
-)
+from ut.models import Employee, Location, AppointmentSlot, Patient, Appointment
 from ut.public.forms import SignUp, CheckApt
 from ut.public.utils import parse_date_as_string, create_times, create_table_dict
 from ut import db
@@ -43,54 +42,128 @@ def e_home():
         legend="Sign Up Caller Now",
     )
 
-@employee.route("/employee/selectapt", methods=['GET', 'POST'])
+
+@employee.route("/employee/selectapt", methods=["GET", "POST"])
 @login_required
 def selectapt():
-  locations = create_location_list()
-  form = SelectApt()
-  form.location.choices = [(location.id, location.name) for location in locations]
-  if form.validate_on_submit():
-    locationid = form.location.data
-    _date = form.date.data.strftime("%Y-%m-%d")
-    return redirect(url_for("employee.pending_appointments", locationid=locationid, _date=_date))
+    locations = create_location_list()
+    form = SelectApt()
+    form.location.choices = [(location.id, location.name) for location in locations]
+    if form.validate_on_submit():
+        locationid = form.location.data
+        _date = form.date.data.replace(year=2020).strftime("%Y-%m-%d")
+        return redirect(
+            url_for("employee.pending_appointments", locationid=locationid, _date=_date)
+        )
 
-  return render_template('e_select_appt.html', title='Sort appointments by location and date', form=form, legend="Select Location and Date for appointments")
+    return render_template(
+        "e_select_appt.html",
+        title="Sort appointments by location and date",
+        form=form,
+        legend="Select Location and Date for appointments",
+        locations=locations,
+    )
 
-@employee.route('/employee/pendingappointments/<int:locationid>/<string:_date>', methods=["GET", "POST"])
+
+@employee.route(
+    "/employee/pendingappointments/<int:locationid>/<string:_date>",
+    methods=["GET", "POST"],
+)
 @login_required
 def pending_appointments(locationid, _date):
-  beginning_of_date = dt.datetime.strptime(_date, "%Y-%m-%d").replace(year=2020)
-  end_of_date = dt.datetime(beginning_of_date.year, beginning_of_date.month, beginning_of_date.day, 18)
-  locations = create_location_list()
-  loc = Location.query.filter_by(id=locationid).first()
-  appointments = Appointment.query.filter(Appointment.location_id==loc.id, Appointment.schedule_date_time>beginning_of_date, Appointment.schedule_date_time<end_of_date).all()
-  patients = Patient.query.join(Appointment).filter(Appointment.location_id==loc.id, Appointment.schedule_date_time>beginning_of_date, Appointment.schedule_date_time<end_of_date).all()
-  appointment_with_patient = zip(appointments, patients)
+    beginning_of_date = dt.datetime.strptime(_date, "%Y-%m-%d").replace(year=2020)
+    end_of_date = dt.datetime(
+        beginning_of_date.year, beginning_of_date.month, beginning_of_date.day, 18
+    )
+    locations = create_location_list()
+    loc = Location.query.filter_by(id=locationid).first()
+    appointments = Appointment.query.filter(
+        Appointment.location_id == loc.id,
+        Appointment.schedule_date_time > beginning_of_date,
+        Appointment.schedule_date_time < end_of_date,
+    ).all()
+    patients = (
+        Patient.query.join(Appointment)
+        .filter(
+            Appointment.location_id == loc.id,
+            Appointment.schedule_date_time > beginning_of_date,
+            Appointment.schedule_date_time < end_of_date,
+        )
+        .all()
+    )
+    appointment_with_patient = zip(appointments, patients)
 
-  form = SelectApt()
-  form.location.choices = [(location.id, location.name) for location in locations]
-  if form.validate_on_submit():
-    locationid = form.location.data
-    _date = form.date.data.strftime("%Y-%m-%d")
-    return redirect(url_for("employee.pending_appointments", locationid=locationid, _date=_date))
-  return render_template('e_pendingappt.html', title='Patients needing confirmations', loc=loc, appointment_with_patient=appointment_with_patient, locations=locations, form=form, legend="Select New Location and Date for appointments")
+    form = SelectApt()
+    form.location.choices = [(location.id, location.name) for location in locations]
+    if form.validate_on_submit():
+        locationid = form.location.data
+        _date = form.date.data.strftime("%Y-%m-%d")
+        return redirect(
+            url_for("employee.pending_appointments", locationid=locationid, _date=_date)
+        )
+    return render_template(
+        "e_pendingappt.html",
+        title="Patients needing confirmations",
+        _date=_date,
+        loc=loc,
+        appointment_with_patient=appointment_with_patient,
+        locations=locations,
+        form=form,
+        legend="Select New Location and Date for appointments",
+    )
 
-@employee.route("/employee/patient_inquiry/<int:patientid>/<int:locationid>/<string:_date>", methods=["GET", "POST"])
+
+@employee.route(
+    "/employee/patient_inquiry/<int:patientid>/<int:locationid>/<string:_date>",
+    methods=["GET", "POST"],
+)
 @login_required
 def patient_inquiry(patientid, locationid, _date):
-  locations = create_location_list()
-  patient = Patient.query.filter_by(id=patientid).first()
-  form = PatientData()
-  if form.validate_on_submit():
-    flash(f"Succesfully updated {patient.first} {patient.last}'s appointment. Thanks for your hard work!", 'success')
-    return redirect(url_for("employee.pending_appointments", locationid=locationid, _date=_date))
-  side_form = SelectApt()
-  side_form.location.choices = [(location.id, location.name) for location in locations]
-  if side_form.validate_on_submit():
-    locationid = side_form.location.data
-    _date = side_form.date.data.strftime("%Y-%m-%d")
-    return redirect(url_for("employee.pending_appointments", locationid=locationid, _date=_date))
-  return render_template('patient.html', title="Patient Inquiry", locations=locations, form=form, side_form=side_form)
+    locations = create_location_list()
+    patient = Patient.query.filter_by(id=patientid).first()
+    appointment = Appointment.query.filter_by(patient_scheduled=patient.id).first()
+    form = PatientData()
+    form.appointment_location.choices = [
+        (location.id, location.name) for location in locations
+    ]
+    if form.validate_on_submit():
+        flash(
+            f"Succesfully updated {patient.first} {patient.last}'s appointment. Thanks for your hard work!",
+            "success",
+        )
+        return redirect(
+            url_for("employee.pending_appointments", locationid=locationid, _date=_date)
+        )
+    form.first.data = patient.first
+    form.last.data = patient.last
+    form.date_of_birth.data = patient.dob
+    form.phone_number.data = patient.phone
+    form.email.data = patient.email
+    form.language.data = patient.lang
+    form.confirmed.data = patient.confirmed
+    form.appointment_location.data = (
+        Location.query.filter_by(id=locationid).first().name
+    )
+    form.appointment_time.data = appointment.schedule_date_time
+    side_form = SelectApt()
+    side_form.location.choices = [
+        (location.id, location.name) for location in locations
+    ]
+    if side_form.validate_on_submit():
+        locationid = side_form.location.data
+        _date = side_form.date.data.strftime("%Y-%m-%d")
+        return redirect(
+            url_for("employee.pending_appointments", locationid=locationid, _date=_date)
+        )
+    return render_template(
+        "patient.html",
+        title="Patient Inquiry",
+        locations=locations,
+        form=form,
+        legend=f"{patient.first} {patient.last}",
+        side_form=side_form,
+        side_legend="Choose a different appointment table.",
+    )
 
 
 @employee.route("/location/<int:locationid>", methods=["GET", "POST"])
