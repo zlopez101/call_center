@@ -5,7 +5,6 @@ from flask import (
     redirect,
     url_for,
     request,
-    current_app,
 )
 from ut.employee.forms import (
     RegisterForm,
@@ -13,7 +12,6 @@ from ut.employee.forms import (
     SelectApt,
     PatientData,
     IssueSubmit,
-    FindPatient
 )
 from ut.employee.utils import create_location_list
 from flask_login import current_user, login_required, login_user, logout_user
@@ -33,15 +31,10 @@ employee = Blueprint("employee", __name__, template_folder="employee_templates")
 def e_home():
     "The employee home page"
     locations = create_location_list()
-    form = SignUp()
-    if form.validate_on_submit():
-        flash("Form Submission was complete!", "success")
     return render_template(
         "main/e_home.html",
         title="UT Physicians Employee Home Page",
-        locations=locations,
-        form=form,
-        legend="Sign Up Caller Now",
+        locations=locations
     )
 
 
@@ -289,9 +282,9 @@ def appointment(locationid, date, aS_id):
         db.session.commit()
 
         "Create the new Appointment"
-        web_employee = Employee.query.filter_by(first="Web").first()
+        employee = Employee.query.filter_by(id=current_user.id).first()
         new_appointment = Appointment(
-            created_by=web_employee.id,
+            created_by=employee.id,
             date_created=dt.datetime.utcnow(),
             patient_scheduled=new_patient.id,
             location_id=locationid,
@@ -315,8 +308,8 @@ def appointment(locationid, date, aS_id):
         )
     return render_template(
         "e_appointment.html",
-        title="Sign up Today",
-        legend=f"Sign Up for an Appointment on {_day} at {_time} at {location.name}.",
+        title="Create Appointment",
+        legend=f"Create an Appointment on {_day} at {_time} at {location.name}.",
         form=form,
         locations=locations,
     )
@@ -376,11 +369,11 @@ def team():
   employees = Employee.query.all()
   return render_template('main/team.html', title='Meet the Team', employees=employees, locations=locations)
 
-@employee.route("/employee/profile/<int:employeeid>")
+@employee.route("/employee/profile/")
 @login_required
-def profile(employeeid):
+def profile():
   locations = create_location_list()
-  employee = Employee.query.filter_by(id=employeeid).first()
+  employee = Employee.query.filter_by(id=current_user.id).first()
   form = RegisterForm()
   if form.validate_on_submit():
     hash_pass = bcrypt.generate_password_hash(form.password.data).decode(
@@ -393,10 +386,10 @@ def profile(employeeid):
     employee.password = hash_pass
     db.session.commit()
   form.first.data = employee.first
-  form.last.data = employee.data
+  form.last.data = employee.last
   form.email.data = employee.email
   form.username.data = employee.username
-  return render_template('profile.html', title=f'{employee.first} {employee.last} profile', form=form, locations=locations)
+  return render_template('main/profile.html', title=f'{employee.first} {employee.last} profile', form=form, locations=locations, legend='My Profile')
 
 @employee.route("/employee/issue_submit", methods=['GET', 'POST'])
 @login_required
@@ -405,104 +398,4 @@ def issue_submit():
   form = IssueSubmit()
   if form.validate_on_submit():
     flash("Thanks for your input!", "success")
-  return render_template('main/issue_submission.html', title='Submit an issue', locations=locations)
-
-
-@employee.route("/employee/reschedule",  methods=['GET', 'POST'])
-@login_required
-def reschedule():
-  locations = create_location_list()
-  form = FindPatient()
-  if form.validate_on_submit():
-    flash('Submitted')
-    return redirect(url_for('employee.find_patient', dob=form.date_of_birth.data.strftime("%m-%d-%Y"), last=form.last.data, first=form.first.data))
-  return render_template('reschedule/start.html', title='Reschedule', form=form, locations=locations, legend='Find Patient. Date of Birth Required')
-
-
-@employee.route('/employee/reschedule/submit/<string:dob>/<string:first>/<string:last>', methods=['GET', 'POST'])
-@login_required
-def find_patient(dob, first, last):
-  locations = create_location_list()
-  _dob = dob.split('-')
-  dob_dt = dt.date(int(_dob[2]), int(_dob[0]),int(_dob[1]))
-  patients = Patient.query.filter_by(dob=dob_dt,).all()
-  if first:
-    patients = Patient.query.filter_by(dob=dob_dt,first=first).all()
-  if last:
-    patients = Patient.query.filter_by(dob=dob_dt,first=first).all()
-  if first and last:
-    patients = Patient.query.filter_by(dob=dob_dt,first=first, last=last).all()
-  return render_template('reschedule/find_patient.html', title=f"Choose Correct Patient", patients=patients, locations=locations)
-
-@employee.route('/employee/reschedule/patient/<int:patientid>', methods=['GET', 'POST'])
-@login_required
-def reschedule_patient(patientid):
-  locations = create_location_list()
-  patient = Patient.query.filter_by(id=patientid).first()
-  appointments = Appointment.query.filter_by(patient_scheduled=patient.id).all()
-  return render_template('reschedule/find_appointment.html', title=f"Reschedule", locations=locations, appointments=appointments, patient=patient)
-
-@employee.route('/employee/reschedule/patient/<int:patientid>/appointment/<int:appointmentid>', methods=['GET', 'POST'])
-@login_required
-def reschedule_choose_date(patientid, appointmentid):
-  locations = create_location_list()
-  patient = Patient.query.filter_by(id=patientid).first()
-  appointment = Appointment.query.filter_by(id=appointmentid).first()
-  form = SelectApt()
-  form.location.choices = [(location.id, location.name) for location in locations]
-  if form.validate_on_submit():
-      locationid = form.location.data
-      _date = form.date.data.replace(year=2020).strftime("%Y-%m-%d")
-      return redirect(
-          url_for("employee.reschedule_patient_appointment", locationid=locationid, _date=_date, patientid=patient.id, appointmentid=appointment.id)
-      )
-  return render_template('reschedule/choose.html', form=form, title=f'Choose new location and date for {patient.first} {patient.last}', legend =f'Choose new location and date for {patient.first} {patient.last}')
-
-@employee.route('/employee/reschedule/patient/<int:patientid>/appointment/<int:appointmentid>/date/<string:_date>/<int:locationid>', methods=['GET', 'POST'])
-@login_required
-def reschedule_patient_appointment(patientid, appointmentid, _date, locationid):
-  locations = create_location_list()
-  _date, _ = parse_date_as_string(_date)
-  date = dt.datetime.strptime(_date, "%Y-%m-%d")
-  appointmentslots = AppointmentSlot.query.filter(
-      AppointmentSlot.date_time >= date,
-      AppointmentSlot.location_id == locationid,
-      AppointmentSlot.date_time < date + dt.timedelta(days=5),
-  ).all()
-  location = Location.query.filter_by(id=locationid).first_or_404()
-  table_dates = np.arange(
-      date, date + dt.timedelta(days=5), dtype="datetime64[D]"
-  )
-  table_times = create_times()
-  time_table = create_table_dict(appointmentslots, table_times,table_dates)
-  # for table configuration
-  table_dates = [
-      dt.datetime.strptime(date, "%Y-%m-%d")
-      for date in np.datetime_as_string(table_dates)
-  ]
-  #for side form 
-  form = SelectApt()
-  form.location.choices = [(location.id, location.name) for location in locations]
-  if form.validate_on_submit():
-      locationid = form.location.data
-      _date = form.date.data.replace(year=2020).strftime("%Y-%m-%d")
-      return redirect(
-          url_for("employee.reschedule_patient_appointment", locationid=locationid, _date=_date)
-      ) 
-  return render_template('reschedule/reschedule_patient.html', title=f"Reschedule", location_id=location.id, form=form,
-      time_table=time_table,
-      dates=table_dates,
-      times=table_times,
-      request_day=date,
-      locations=locations,)
-
-@employee.route('/employee/reschedule/patient/form/<int:patientid>/appointment/<int:appointmentid>/date/<string:date>/time/<string:time>/<int:aS_id>/<int:locationid>', methods=['GET', 'POST'])
-@login_required
-def reschedule_patient_form(patientid, appointmentid, date, locationid, aS_id, time):
-  pass
-
-@employee.route('/employee/reschedule/creations', methods=['POSTS'])
-@login_required
-def create_rescheduled_apt():
-  flash("Appointment rescheduled!", 'success')
-  return redirect(url_for("employee.e_home"))
+  return render_template('main/issue_submission.html', title='Submit an issue', locations=locations, form=form, legend='Please tell us about your issue')

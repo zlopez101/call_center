@@ -30,10 +30,12 @@ def create_app(config_class=Config):
     from ut.employee.routes import employee
     from ut.public.routes import public
     from ut.confirmations.routes import confirmations
+    from ut.reschedule.routes import reschedule
 
     app.register_blueprint(public)
     app.register_blueprint(employee)
     app.register_blueprint(call_center)
     app.register_blueprint(confirmations)
+    app.register_blueprint(reschedule)
     return app
 

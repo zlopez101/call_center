@@ -1,4 +1,4 @@
-{% extends "e_layout.html" %}
+{% extends "r_layout0.html" %}
 {% block content %}
 
 <table class="table table-hover table-responsive">
@@ -24,7 +24,7 @@
             {% for aS_  in aS%}
             {% if aS_.slot_1 == False%}
             <td><a class="btn btn-outline-success"
-                    href="{{ url_for('employee.create_rescheduled_apt', locationid=location_id, date=aS_.date_time, request_time=time, aS_id=aS_.id) }}"
+                    href="{{ url_for('reschedule.create', patientid=patientid, aS_id=aS_.id, appointmentid=appointmentid) }}"
                     role="button">Available</a></td>
             {% else %}
             <td><a class="btn btn-outline-danger" href="#" role="button">Taken!</a></td>

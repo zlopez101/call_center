@@ -1,4 +1,4 @@
-{% extends "e_layout.html" %}
+{% extends "r_layout0.html" %}
 {% block content %}
 <div class='content-section'>
   <h3>{{patient.first}} {{patient.last}}'s appointments</h3>
@@ -22,7 +22,7 @@
       <td>{{  appointment.schedule_date_time.strftime('%m-%d-%Y') }}</td>
       <td>{{ appointment.schedule_date_time.strftime('%H:%M %p') }}</td>
       <td><a
-          href="{{ url_for('employee.reschedule_choose_date', patientid=patient.id, appointmentid=appointment.id) }}">Select</a></td>
+          href="{{ url_for('reschedule.choose_date', patientid=patient.id, appointmentid=appointment.id) }}">Select</a></td>
     {% else %}
     <tr id='apptTableRow' class='table-danger'>
       <th scope="row">{{ appointment.id}}</th>
@@ -30,7 +30,7 @@
       <td>{{  appointment.schedule_date_time.strftime('%m-%d-%Y') }}</td>
       <td>{{ appointment.schedule_date_time.strftime('%H:%M %p') }}</td>
       <td><a
-          href="{{ url_for('employee.reschedule_choose_date', patientid=patient.id, appointmentid=appointment.id) }}">Select</a></td>
+          href="{{ url_for('reschedule.choose_date', patientid=patient.id, appointmentid=appointment.id) }}">Select</a></td>
     {% endif %}
     {% endfor %}
   </tbody>t
