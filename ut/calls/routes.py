@@ -1,6 +1,6 @@
 from flask import Blueprint, url_for, request, current_app
 from ut.models import Location, Employee
-from ut.call_center.view_helpers import (
+from ut.calls.view_helpers import (
     twiml,
     send_confirm_text,
     _create_location_dict,
@@ -9,16 +9,16 @@ from ut.call_center.view_helpers import (
 from twilio.twiml.voice_response import VoiceResponse, Gather
 
 
-call_center = Blueprint("call_center", __name__)
+calls = Blueprint("calls", __name__)
 
 
-@call_center.route("/confirm_app")
+@calls.route("/confirm_app")
 def confirm():
     text = send_confirm_text("+17134306973", "message")
     return f"hello confirm {text}"
 
 
-@call_center.route("/welcome_to_call_center", methods=["GET", "POST"])
+@calls.route("/welcome_to_call_center", methods=["GET", "POST"])
 def welcome():
     response = VoiceResponse()
     response.say("Welcome to the U T Physicians Corona Virus Testing Call Line.")
@@ -30,7 +30,7 @@ def welcome():
     return twiml(response)
 
 
-@call_center.route("/voice", methods=["GET", "POST"])
+@calls.route("/voice", methods=["GET", "POST"])
 def voice():
     """Respond to incoming phone calls with a 'Hello world' message"""
     # Start our TwiML response
@@ -49,7 +49,7 @@ def voice():
     return str(resp)
 
 
-@call_center.route("/gather", methods=["GET", "POST"])
+@calls.route("/gather", methods=["GET", "POST"])
 def gather():
     resp = VoiceResponse()
     location_dict = _create_location_dict()
@@ -62,7 +62,7 @@ def gather():
     return _redirect_welcome()
 
 
-@call_center.route("/call_center/<int:location_id>", methods=["GET", "POST"])
+@calls.route("/call_center/<int:location_id>", methods=["GET", "POST"])
 def _call_location(location_id):
     employee = random_responder()
     resp = VoiceResponse()

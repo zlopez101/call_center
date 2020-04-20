@@ -28,8 +28,6 @@ def create_employees():
         add = Employee(first=lst[1], last=lst[0], email=lst[2], username=lst[2], password=bcrypt.generate_password_hash("password").decode("utf-8"))
         db.session.add(add)
         db.session.commit()
-        print(f"{lst[1]} {lst[0]} added")
-    return "Success"
 
 
 

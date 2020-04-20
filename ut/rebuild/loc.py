@@ -3,15 +3,22 @@ import datetime as dt
 from ut import db
 from ut.models import Location, AppointmentSlot, Employee
 
-df = pd.read_csv("clinics.csv")
 
-for row in df.itertuples():
-    l = Location(name=row.clinic, address=row.address)
-    db.session.add(l)
-    db.session.commit()
-    print(f"{row.clinic} added to db!")
+def create_locations(clinic_data_path):
+    df = pd.read_csv(clinic_data_path)
+    for row in df.itertuples():
+        l = Location(name=row.clinic, address=row.address)
+        db.session.add(l)
+        db.session.commit()
 
-locations = Location.query.all()
+
+def build_appointment_slots():
+    locations = Location.query.all()
+    days = build_days()
+    datetime_dct = build_times(days)
+    create_appointmentslots(locations, days, datetime_dct)
+
+
 # build days for AppointmentSlot
 def build_days():
     days = []
@@ -25,7 +32,6 @@ def build_days():
     return days
 
 
-days = build_days()
 # build times for days for AppointmentSlot
 def build_times(days):
     # times = []
@@ -43,9 +49,6 @@ def build_times(days):
     return datetime_dct
 
 
-datetime_dct = build_times(days)
-
-
 def create_appointmentslots(locations, days, datetime_dct):
     for location in locations:
         for day in days:
@@ -53,7 +56,3 @@ def create_appointmentslots(locations, days, datetime_dct):
                 app = AppointmentSlot(location_id=location.id, date_time=time)
                 db.session.add(app)
     db.session.commit()
-    return f"IT IS DONE!"
-
-
-example = create_appointmentslots(locations, days, datetime_dct)
