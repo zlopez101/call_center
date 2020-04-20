@@ -25,7 +25,7 @@ def build_days():
     i = 0
     start_date = dt.datetime.strptime("3/22/2020 8:00:00", "%m/%d/%Y %H:%M:%S")
     days.append(start_date)
-    while i < 31:
+    while i < 100:
         start_date = start_date + dt.timedelta(days=1)
         days.append(start_date)
         i = i + 1

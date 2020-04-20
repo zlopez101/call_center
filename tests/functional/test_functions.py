@@ -9,4 +9,7 @@ def test_home_page(create_client):
 
 
 def test_locations_page(create_client):
-    pass
+    response = create_client.get("/1")
+    assert response.status_code == 200
+    assert b"11452 Space Center Blvd Houston, Tx 77059" in response.data
+    assert b"Pick a date to check appointment availability" in response.data

@@ -15,4 +15,5 @@ class Config_Tester:
     WTF_CSRF_ENABLED = False
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///database_test_site.db"
+    MAP_KEY = os.getenv("GOOGLE_MAP_API")
     BCRYPT_LOG_ROUNDS = 4
